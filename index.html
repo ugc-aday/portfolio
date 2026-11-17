@@ -6,7 +6,7 @@
 <title>Day Souza · portfólio UGC</title>
 <meta name="description" content="Day Souza, UGC creator de casa e decoração, comida, tech e pet. Vídeos com estratégia, roteiro e edição prontos pra anúncio.">
 
-<!-- PRÉVIA DO LINK NO WHATSAPP: depois de publicar, troque MEU-LINK pelo endereço do site (2 lugares) -->
+<!-- PRÉVIA DO LINK NO WHATSAPP: se o endereço do site mudar, troque nos 2 lugares abaixo -->
 <meta property="og:title" content="Day Souza">
 <meta property="og:description" content="Eu sou da Comunicação! Gosto de gente e amo fazer conexões e gerar identificação! Amo transmitir essa energia em todos os meus trabalhos.">
 <meta property="og:type" content="website">
@@ -88,7 +88,8 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,44px);lin
 .pontos{position:absolute;right:-5%;bottom:6%;width:96px;height:96px;background:radial-gradient(var(--preto) 2.4px,transparent 2.6px) 0 0/16px 16px}
 .foto{position:absolute;inset:4% 6%;border:3px solid var(--preto);border-radius:16px;overflow:hidden;transform:rotate(1.6deg)}
 .foto img,.sobre-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.foto img{object-position:50% 60%}.olho{position:absolute;left:-7%;top:3%;width:96px}
+.foto img{object-position:50% 60%}
+.olho{position:absolute;left:-7%;top:3%;width:96px}
 .risco{position:absolute;right:-6%;top:11%;width:120px}
 
 /* SOBRE */
@@ -129,7 +130,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,44px);lin
 
 /* VÍDEOS */
 .vid{position:relative;aspect-ratio:9/16;overflow:hidden;display:block;width:100%;border-radius:4px}
-.vid video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--preto)}
+.vid video,.vid .yt-capa{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--preto)}
 .vid .play{position:absolute;left:10px;bottom:10px;width:38px;height:38px;border-radius:50%;background:var(--amarelo);border:2px solid var(--preto);display:none;align-items:center;justify-content:center;font-size:13px;color:var(--preto);padding-left:3px}
 .vid.ok{cursor:pointer}
 .vid.ok .play{display:flex}
@@ -218,7 +219,8 @@ footer span{font-size:13px;letter-spacing:.06em}
 /* PLAYER GRANDE */
 .player{position:fixed;inset:0;z-index:100;background:rgba(21,21,21,.92);display:none;align-items:center;justify-content:center;padding:20px}
 .player.aberto{display:flex}
-.player video{height:min(88vh,calc((100vw - 40px) * 16 / 9));aspect-ratio:9/16;max-width:100%;background:#000;border-radius:10px;border:3px solid var(--amarelo)}
+.player video,.player iframe{height:min(88vh,calc((100vw - 40px) * 16 / 9));aspect-ratio:9/16;max-width:100%;background:#000;border-radius:10px;border:3px solid var(--amarelo)}
+.player [hidden]{display:none}
 .player button{position:absolute;top:14px;right:14px;width:46px;height:46px;border-radius:50%;background:var(--amarelo);color:var(--preto);font-size:22px;font-weight:700;border:2px solid var(--preto)}
 
 /* TELAS MÉDIAS */
@@ -297,6 +299,7 @@ footer span{font-size:13px;letter-spacing:.06em}
 <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Player de vídeo">
   <button type="button" id="player-x" aria-label="Fechar">✕</button>
   <video id="player-video" controls playsinline></video>
+  <iframe id="player-yt" title="Vídeo do YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
 </div>
 
 <script>
@@ -354,13 +357,22 @@ function blocoFoto(src,alt,dica){
   return '<div class="dica">'+ICO.foto+'<span>'+esc(dica)+'</span><small>'+esc(src)+'</small></div>'
     +(src?'<img src="'+caminho(src)+'" alt="'+esc(alt)+'" onerror="this.remove()">':'');
 }
+/* pega o ID de um link do YouTube (shorts, watch ou youtu.be) */
+function idYoutube(link){
+  var m=String(link||'').match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/i);
+  return m?m[1]:'';
+}
 function blocoVideo(v,dica,primeiro){
   var arquivo=v.video||'';
+  var yt=idYoutube(arquivo);
   var ehMp4=/\.mp4$/i.test(arquivo)&&!/^https?:\/\/(www\.)?(instagram|tiktok|drive\.google|vm\.tiktok)/i.test(arquivo);
-  var h='<div class="vid lacuna" tabindex="0" role="button" data-video="'+esc(ehMp4?arquivo:'')+'" data-titulo="'+esc(v.titulo||arquivo)+'" aria-label="'+esc('Abrir vídeo '+(v.titulo||''))+'">';
+  var h='<div class="vid lacuna" tabindex="0" role="button" data-video="'+esc(ehMp4?arquivo:'')+'" data-yt="'+esc(yt)+'" data-titulo="'+esc(v.titulo||yt||arquivo)+'" aria-label="'+esc('Abrir vídeo '+(v.titulo||''))+'">';
   if(v.res) h+='<span class="res">'+esc(v.res)+'</span>';
-  h+='<div class="dica">'+ICO.video+'<span>'+esc(dica)+'</span><small>'+esc(ehMp4?arquivo:(arquivo?'Link não toca aqui: falta o arquivo .mp4':'falta o arquivo .mp4'))+'</small></div>';
-  if(ehMp4){
+  h+='<div class="dica">'+ICO.video+'<span>'+esc(dica)+'</span><small>'+esc(ehMp4||yt?arquivo:(arquivo?'Link não toca aqui: falta o arquivo .mp4':'falta o arquivo .mp4'))+'</small></div>';
+  if(yt){
+    /* vídeo do YouTube: mostra a capa do vídeo e abre o player do YouTube ao clicar */
+    h+='<img class="yt-capa" loading="lazy" alt="" src="'+esc(v.capa?caminho(v.capa):'https://i.ytimg.com/vi/'+yt+'/hqdefault.jpg')+'">';
+  } else if(ehMp4){
     h+='<video muted playsinline preload="metadata"'+(primeiro&&!SEM_ANIMACAO?' autoplay loop data-auto="1"':'')
       +(v.capa?' poster="'+caminho(v.capa)+'"':'')+' src="'+caminho(arquivo)+'#t=0.1"></video>';
   }
@@ -372,7 +384,8 @@ function ligarVideos(raiz,aoAssentar){
   Array.prototype.forEach.call(lista,function(caixa){
     var video=caixa.querySelector('video'), resolvido=false;
     function fim(ok){ if(resolvido) return; resolvido=true; if(ok) caixa.classList.add('ok'); else if(video){video.remove();video=null;} if(aoAssentar) aoAssentar(ok); }
-    if(!video){ fim(false); }
+    if(caixa.dataset.yt){ fim(true); }
+    else if(!video){ fim(false); }
     else{
       video.addEventListener('loadedmetadata',function(){fim(true);});
       video.addEventListener('error',function(){fim(false);});
@@ -384,24 +397,32 @@ function ligarVideos(raiz,aoAssentar){
         caixa.addEventListener('mouseleave',function(){ if(video){video.pause();} });
       }
     }
-    function abrir(){ if(caixa.classList.contains('ok')) abrirPlayer(caixa.dataset.video,caixa.dataset.titulo); }
+    function abrir(){ if(caixa.classList.contains('ok')) abrirPlayer(caixa.dataset.video,caixa.dataset.titulo,caixa.dataset.yt); }
     caixa.addEventListener('click',abrir);
     caixa.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();abrir();} });
   });
 }
 
 /* ---------- player grande ---------- */
-function abrirPlayer(arquivo,titulo){
-  var pv=$('player-video');
-  pv.src=caminho(arquivo); pv.muted=false;
-  $('player').classList.add('aberto');
-  var p=pv.play(); if(p&&p.catch) p.catch(function(){});
+function abrirPlayer(arquivo,titulo,yt){
+  var pv=$('player-video'), py=$('player-yt');
+  if(yt){
+    pv.hidden=true; py.hidden=false;
+    py.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&playsinline=1&rel=0';
+    $('player').classList.add('aberto');
+  } else {
+    py.hidden=true; pv.hidden=false;
+    pv.src=caminho(arquivo); pv.muted=false;
+    $('player').classList.add('aberto');
+    var p=pv.play(); if(p&&p.catch) p.catch(function(){});
+  }
   $('player-x').focus();
   /* métrica: qual vídeo foi aberto (só se o Umami existir) */
   try{ if(window.umami&&typeof window.umami.track==='function'){ window.umami.track(('video-'+slug(titulo)).slice(0,50).replace(/-+$/,'')); } }catch(e){}
 }
 function fecharPlayer(){
   var pv=$('player-video'); pv.pause(); pv.removeAttribute('src'); pv.load();
+  var py=$('player-yt'); py.removeAttribute('src'); py.hidden=true;
   $('player').classList.remove('aberto');
 }
 
@@ -459,9 +480,9 @@ function montarSobre(){
 
   $('faixa-preta').innerHTML='<h3>O que eu faço pela sua marca</h3><div class="difs">'
    +(DADOS.diferenciais||[]).map(function(d,i){return '<div class="dif">'+(ICO.difs[i%3])+'<h4>'+esc(d.titulo)+'</h4><p>'+esc(d.texto)+'</p></div>';}).join('')
-   +'</div><div class="numeros"'+(DADOS.mostrarProvas?'':' style="display:none"')+'>'
+   +'</div>'+(DADOS.mostrarProvas?'<div class="numeros">'
    +(DADOS.provas||[]).map(function(p){return '<div><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="Preencha em DADOS.provas">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';}).join('')
-   +'</div>';
+   +'</div>':'');
 }
 function montarRolo(){
   var grupo=(DADOS.marcas||[]).map(function(m){
@@ -617,18 +638,20 @@ const DADOS = {
   email: "ugc.aday@gmail.com",
   // Cidade onde você mora
   cidade: "Sorocaba - SP",
-  // Link do portfólio depois de publicado. Troque também MEU-LINK lá no topo do arquivo (og:url e og:image)
+  // Link do portfólio publicado. Se mudar, troque também lá no topo do arquivo (og:url e og:image)
   site: "https://ugc-aday.github.io/portfolio/",
   // Endereço do seu formulário no Formspree (ex.: "https://formspree.io/f/abcdwxyz"). Vazio = sem formulário
   formspree: "",
   // ID do site no Umami (métricas). Vazio = sem métricas
   umami: "",
   // Seus nichos numa linha só, pra capa
-  nichosResumo: "casa e decoração, comida, tech e pet",
+  nichosResumo: "comida, casa, autocuidado, tech e pet",
   // Frase curta do que você faz pela marca
   frase: "Eu sou da Comunicação! Gosto de gente e amo fazer conexões e gerar identificação! Amo transmitir essa energia em todos os meus trabalhos.",
+  // Mostrar os 3 números na capa e na faixa preta? false = escondidos. Quando preencher os números abaixo, troque pra true
+  mostrarProvas: false,
   // Os 3 números da capa. Preencha "numero" (ex.: "120+", "6", "5 dias")
-  mostrarProvas: false, provas: [
+  provas: [
     { numero: "", texto: "vídeos gravados" },
     { numero: "", texto: "marcas atendidas" },
     { numero: "", texto: "prazo de entrega" }
@@ -637,8 +660,12 @@ const DADOS = {
   fotoCapa: "midia/capa.jpg",
   fotoSobre: "midia/sobre.jpg",
   // Texto do Sobre mim, em primeira pessoa. Cada item entre aspas é um parágrafo. Ex.: ["Parágrafo 1", "Parágrafo 2"]
-  sobreTexto: ["Oi, eu sou a Day! Sou da Comunicação, moro em Sorocaba (SP) e tenho uma certeza: gente compra de gente. Por isso eu amo conversar, criar conexão e fazer quem assiste pensar “nossa, sou eu”.", "Casa, comida, tecnologia e pet são assuntos do meu dia a dia, e é assim que o seu produto aparece nos meus vídeos: do jeito que ele entra na vida do seu cliente. Natural, leve e sem cara de propaganda.", "Do roteiro à edição, eu cuido de tudo com estratégia e muita boa energia. Você recebe um vídeo pronto pra rodar, e o seu cliente ganha um bom motivo pra confiar na sua marca."],
-  // Texto do círculo amarelo no Sobre mim
+  sobreTexto: [
+    "Oi, eu sou a Day! Sou da Comunicação, moro em Sorocaba (SP) e tenho uma certeza: gente compra de gente. Por isso eu amo conversar, criar conexão e fazer quem assiste pensar \"nossa, sou eu\".",
+    "Casa, comida, tecnologia e pet são assuntos do meu dia a dia, e é assim que o seu produto aparece nos meus vídeos: do jeito que ele entra na vida do seu cliente. Natural, leve e sem cara de propaganda.",
+    "Do roteiro à edição, eu cuido de tudo com estratégia e muita boa energia. Você recebe um vídeo pronto pra rodar, e o seu cliente ganha um bom motivo pra confiar na sua marca."
+  ],
+  // Texto do círculo amarelo no Sobre mim (curto, pra caber no círculo)
   selo: "Gente de verdade vende de verdade",
   // Seus 3 diferenciais (faixa preta)
   diferenciais: [
@@ -653,28 +680,26 @@ const DADOS = {
     { titulo: "Predlecta é vida!", nicho: "comida", formato: "", video: "midia/destaques/2.mp4", capa: "", res: "" },
     { titulo: "A vida com Claude", nicho: "tech", formato: "", video: "midia/destaques/3.mp4", capa: "", res: "" }
   ],
-  // Uma aba por nicho. Os vídeos ficam em midia/nichos/NOME-DA-PASTA/ (pasta sem acento e sem espaço).
-  // Mínimo 3 vídeos por nicho. Pode pôr mais linhas copiando uma e trocando o número.
+  // Uma aba por nicho, nesta ordem. Em "video" pode ser um arquivo .mp4 (em midia/nichos/NOME-DA-PASTA/)
+  // ou um link do YouTube (shorts). Mínimo 3 vídeos por nicho: pra pôr mais, copie uma linha e troque.
   nichos: [
-    { nome: "casa e decoração", videos: [
-      { titulo: "", formato: "", video: "midia/nichos/casa-e-decoracao/1.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/casa-e-decoracao/2.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/casa-e-decoracao/3.mp4", capa: "" }
-    ]},
     { nome: "comida", videos: [
-      { titulo: "", formato: "", video: "midia/nichos/comida/1.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/comida/2.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/comida/3.mp4", capa: "" }
+      { titulo: "Predlecta", formato: "", video: "https://youtube.com/shorts/R-jYJA3XVPk", capa: "" }
+    ]},
+    { nome: "casa e decoração", videos: [
+      { titulo: "Candura, sua casa em dia!", formato: "", video: "https://youtube.com/shorts/MvnRJLudHD8", capa: "" }
+    ]},
+    { nome: "autocuidado", videos: [
+      { titulo: "Boticário", formato: "", video: "https://youtube.com/shorts/1zkP9cvSf5Q", capa: "" }
     ]},
     { nome: "tech", videos: [
-      { titulo: "", formato: "", video: "midia/nichos/tech/1.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/tech/2.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/tech/3.mp4", capa: "" }
+      { titulo: "", formato: "", video: "midia/nichos/tech/1.mp4", capa: "" }
     ]},
     { nome: "pet", videos: [
-      { titulo: "", formato: "", video: "midia/nichos/pet/1.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/pet/2.mp4", capa: "" },
-      { titulo: "", formato: "", video: "midia/nichos/pet/3.mp4", capa: "" }
+      { titulo: "Petlove", formato: "", video: "https://youtube.com/shorts/N00NxyJJ9oM", capa: "" }
+    ]},
+    { nome: "educação", videos: [
+      { titulo: "Tudo sobre a Talk N Talk!", formato: "", video: "https://youtube.com/shorts/ibidy08xEZQ", capa: "" }
     ]}
   ],
   // Depoimentos REAIS das marcas. texto: a frase da marca. marca: nome. detalhe: contexto (ex.: "campanha de Dia das Mães").
