@@ -64,6 +64,10 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,44px);lin
 .links a{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
 .links a:hover{border-color:var(--vermelho)}
 .menu .btn{padding:9px 16px;font-size:12px}
+.idioma{display:inline-flex;border:2px solid var(--preto);border-radius:999px;overflow:hidden;flex:none}
+.idioma button{padding:7px 11px;font-size:12px;font-weight:700;letter-spacing:.08em;line-height:1;background:transparent;color:var(--preto)}
+.idioma button[aria-pressed="true"]{background:var(--preto);color:var(--creme2)}
+.idioma button:not([aria-pressed="true"]):hover{background:var(--amarelo)}
 .menu-btn{display:none;margin-left:auto;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:2px solid var(--preto);border-radius:999px;padding:8px 14px}
 
 /* CAPA */
@@ -211,6 +215,8 @@ footer{background:var(--preto);color:var(--creme2);padding:30px 0 34px}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-right:96px}
 footer .logo{color:var(--creme2)}
 footer span{font-size:13px;letter-spacing:.06em}
+footer .rodape-cargo{font-weight:700;letter-spacing:.12em}
+footer .copy{color:#cfc7b6}
 
 /* SERVIÇOS */
 .servicos{padding:84px 0;border-top:2px solid var(--preto);position:relative;overflow:hidden}
@@ -268,7 +274,8 @@ footer span{font-size:13px;letter-spacing:.06em}
   .links{display:none;position:absolute;top:64px;left:0;right:0;background:var(--creme);border-bottom:2px solid var(--preto);flex-direction:column;gap:0;padding:6px 32px 14px}
   .links.aberto{display:flex}
   .links a{padding:12px 0;border-bottom:1px solid rgba(21,21,21,.15);font-size:13px}
-  .menu-btn{display:block}
+  .menu-btn{display:block;margin-left:10px}
+  .idioma{margin-left:auto}
   .menu .wrap>.btn{display:none}
   .capa .wrap,.sobre .wrap,.destaques .wrap,.faixa-amarela .wrap{grid-template-columns:1fr}
   .capa .wrap{gap:56px}
@@ -336,8 +343,8 @@ footer span{font-size:13px;letter-spacing:.06em}
   <section class="destaques" id="destaques"><div class="wrap" id="destaques-conteudo"></div></section>
   <section class="nichos" id="nichos"><div class="wrap" id="nichos-conteudo"></div></section>
   <section class="falam" id="marcas"><div class="wrap" id="falam-conteudo"></div></section>
-  <section class="servicos" id="servicos"><div class="wrap" id="servicos-conteudo"></div></section>
   <section class="galeria" id="galeria"><div class="wrap" id="galeria-conteudo"></div></section>
+  <section class="servicos" id="servicos"><div class="wrap" id="servicos-conteudo"></div></section>
   <section class="contato" id="contato">
     <div class="wrap" id="duvidas-conteudo"></div>
     <div class="faixa-amarela"><div class="wrap" id="contato-conteudo"></div></div>
@@ -365,6 +372,84 @@ function caminho(p){return encodeURI(p||'');}
 var SEM_ANIMACAO=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 var TEM_MOUSE=window.matchMedia&&matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+/* ---------- idioma (PT/EN) ---------- */
+/* Textos fixos da página nos dois idiomas. Os seus textos ficam em DADOS (português) e DADOS_EN (inglês). */
+var TEXTOS={
+  pt:{
+    menuSobre:'Sobre mim', menuDestaques:'Destaques', menuNichos:'Nichos', menuMarcas:'O que as marcas falam', menuServicos:'Serviços', menuGaleria:'Galeria', menuContato:'Contato',
+    menu:'Menu', fechar:'Fechar', cta:'Bora trabalhar →', idioma:'Idioma',
+    ugcDe:'UGC creator de ', verVideos:'Ver meus melhores vídeos →', falarComigo:'Falar comigo →',
+    fotoDe:'Foto de ', dicaCapa:'Retrato com rosto, luz natural e ambiente real. Sem selfie: a capa mostra o seu nível',
+    sobreRotulo:'Sobre mim', sobreTitulo:'Conteúdo com estratégia. Vídeo com ', sobreMao:'alma.',
+    sobreAlt:' no dia a dia', dicaSobre:'Você trabalhando no dia a dia: gravando, editando ou com o produto na mão',
+    sobreVazio:'<b>Seu texto entra aqui.</b> Em primeira pessoa e curto: quem você é, onde mora, sua rotina e por que as marcas do seu nicho combinam com você. Troque em DADOS.sobreTexto.',
+    faixaPreta:'O que eu faço pela sua marca', preencha:'Preencha em DADOS.provas', marcasAtendidas:'Marcas atendidas',
+    destRotulo:'Destaques', destTitulo:'Meus melhores vídeos', destTexto:'Clique pra assistir com som.', verNicho:'Ver por nicho →',
+    dicaDest:'Os melhores na frente, não os mais recentes', faltaNicho:'nicho?', faltaFormato:'formato?',
+    abrirVideo:'Abrir vídeo ', semMp4:'falta o arquivo .mp4', linkNaoToca:'Link não toca aqui: falta o arquivo .mp4',
+    nichoRotulo:'Conteúdo por nichos', nichoTitulo:'Ache o vídeo do ', nichoMao:'seu nicho', videoDe:'Vídeo de ', em:' em ',
+    falamTitulo:'O que as marcas falam', falamVazio:'cole aqui a frase ou o print real da marca', jaAtendi:'Marcas que já atendi',
+    queroEsse:'Quero esse →', fotoGaleria:'Foto {n} da galeria', dicaGaleria:'Foto quadrada, em alta',
+    contatoRotulo:'Contato', duvidasTitulo:'Antes de fechar, as dúvidas rápidas', semResposta:'Escreva sua resposta em DADOS.duvidas',
+    ctaTitulo:'Bora fazer um vídeo que ', ctaRisca:'vende?',
+    formTitulo:'Pede seu orçamento', fNome:'Seu nome', fEmpresa:'Empresa', fProduto:'Produto', fPrazo:'Pra quando você precisa?', fZap:'Seu WhatsApp',
+    enviar:'Enviar pedido →', enviando:'Enviando...', recebi:'Recebi! Te chamo em breve.', erroEnvio:'Não consegui enviar agora. Me chama direto:',
+    zapRotulo:'Chamar no WhatsApp', emailRotulo:'Mandar e-mail',
+    zapMsg:'Oi, {nome}! Vi seu portfólio e quero conversar sobre {assunto} pra minha marca.', assuntoPadrao:'vídeos',
+    emailAssunto:'Vi seu portfólio: quero conversar sobre {assunto} pra minha marca',
+    rodape:'UGC CREATOR & SOCIAL MEDIA MANAGER', tituloPagina:' · portfólio UGC',
+    player:'Player de vídeo', videoYt:'Vídeo do YouTube', falarZap:'Falar no WhatsApp'
+  },
+  en:{
+    menuSobre:'About', menuDestaques:'Featured', menuNichos:'Niches', menuMarcas:'What brands say', menuServicos:'Services', menuGaleria:'Gallery', menuContato:'Contact',
+    menu:'Menu', fechar:'Close', cta:'Work with me →', idioma:'Language',
+    ugcDe:'UGC creator for ', verVideos:'See my best work →', falarComigo:'Get in touch →',
+    fotoDe:'Photo of ', dicaCapa:'A portrait with your face, natural light and a real setting. No selfies: your cover shows your level',
+    sobreRotulo:'About me', sobreTitulo:'Strategic content. Videos with ', sobreMao:'soul.',
+    sobreAlt:' at work', dicaSobre:'You at work: filming, editing or holding the product',
+    sobreVazio:'<b>Your bio goes here.</b> Short and in first person: who you are, where you live, your routine and why brands in your niche are a great fit. Edit it in DADOS_EN.sobreTexto.',
+    faixaPreta:'What I do for your brand', preencha:'Fill this in at DADOS.provas', marcasAtendidas:'Brands I\'ve worked with',
+    destRotulo:'Featured', destTitulo:'My best work', destTexto:'Click to watch with sound.', verNicho:'Browse by niche →',
+    dicaDest:'Your best videos first, not your latest', faltaNicho:'niche?', faltaFormato:'format?',
+    abrirVideo:'Play video ', semMp4:'missing .mp4 file', linkNaoToca:'This link won\'t play here: missing .mp4 file',
+    nichoRotulo:'Content by niche', nichoTitulo:'Find videos in ', nichoMao:'your niche', videoDe:'Video for ', em:' in ',
+    falamTitulo:'What brands say', falamVazio:'paste the brand\'s real quote or screenshot here', jaAtendi:'Brands I\'ve worked with',
+    queroEsse:'Let\'s do this →', fotoGaleria:'Gallery photo {n}', dicaGaleria:'Square, high-res photo',
+    contatoRotulo:'Contact', duvidasTitulo:'Quick answers before we start', semResposta:'Write your answer in DADOS_EN.duvidas',
+    ctaTitulo:'Ready for a video that ', ctaRisca:'sells?',
+    formTitulo:'Request a quote', fNome:'Your name', fEmpresa:'Company', fProduto:'Product', fPrazo:'When do you need it?', fZap:'Your WhatsApp',
+    enviar:'Send request →', enviando:'Sending...', recebi:'Got it! I\'ll get back to you soon.', erroEnvio:'Something went wrong. Message me directly:',
+    zapRotulo:'Message me on WhatsApp', emailRotulo:'Send me an email',
+    zapMsg:'Hi, {nome}! I saw your portfolio and I\'d love to talk about {assunto} for my brand.', assuntoPadrao:'videos',
+    emailAssunto:'Saw your portfolio: let\'s talk about {assunto} for my brand',
+    rodape:'UGC CREATOR & SOCIAL MEDIA MANAGER', tituloPagina:' · UGC portfolio',
+    player:'Video player', videoYt:'YouTube video', falarZap:'Chat on WhatsApp'
+  }
+};
+var LANG='pt';
+var D; /* dados no idioma atual (montado em aplicarIdioma) */
+function t(k,vars){ var s=(TEXTOS[LANG]&&TEXTOS[LANG][k]!=null)?TEXTOS[LANG][k]:TEXTOS.pt[k]; if(vars) Object.keys(vars).forEach(function(v){ s=s.split('{'+v+'}').join(vars[v]); }); return s; }
+/* junta os textos em inglês por cima dos dados em português (listas de objetos: item a item) */
+function mesclar(base,extra){
+  if(extra===undefined||extra===null) return base;
+  if(Array.isArray(base)&&Array.isArray(extra)){
+    var objetos=extra.some(function(x){return x&&typeof x==='object';});
+    if(!objetos) return extra.slice();
+    return base.map(function(b,i){ return mesclar(b,extra[i]); });
+  }
+  if(base&&typeof base==='object'&&!Array.isArray(base)&&typeof extra==='object'){
+    var r={}; Object.keys(base).forEach(function(k){ r[k]=mesclar(base[k],extra[k]); });
+    Object.keys(extra).forEach(function(k){ if(!(k in r)) r[k]=extra[k]; });
+    return r;
+  }
+  return extra;
+}
+function aplicarIdioma(l){
+  LANG=(l==='en')?'en':'pt';
+  D=LANG==='en'?mesclar(DADOS,DADOS_EN):DADOS;
+  document.documentElement.lang=LANG==='en'?'en':'pt-BR';
+}
+
 var ICO={
   foto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>',
   video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 9.5v5l4-2.5z" fill="currentColor"/></svg>',
@@ -389,18 +474,18 @@ function seloGirando(texto,corFundo,corTexto,corMeio,classe){
 }
 
 /* ---------- links de contato ---------- */
-function primeiroNome(){return String(DADOS.nome||'').trim().split(/\s+/)[0]||'';}
+function primeiroNome(){return String(D.nome||'').trim().split(/\s+/)[0]||'';}
 function linkContato(assunto){
-  var sobre=assunto?assunto.toLowerCase():'vídeos';
-  var zap=String(DADOS.whatsapp||'').replace(/\D/g,'');
+  var sobre=assunto?assunto.toLowerCase():t('assuntoPadrao');
+  var zap=String(D.whatsapp||'').replace(/\D/g,'');
   if(zap){
     if(zap.length<=11) zap='55'+zap; /* coloca o código do Brasil se faltar */
-    var msg='Oi, '+primeiroNome()+'! Vi seu portfólio e quero conversar sobre '+sobre+' pra minha marca.';
-    return {tipo:'whatsapp',rotulo:'Chamar no WhatsApp',href:'https://wa.me/'+zap+'?text='+encodeURIComponent(msg)};
+    var msg=t('zapMsg',{nome:primeiroNome(),assunto:sobre});
+    return {tipo:'whatsapp',rotulo:t('zapRotulo'),href:'https://wa.me/'+zap+'?text='+encodeURIComponent(msg)};
   }
-  return {tipo:'email',rotulo:'Mandar e-mail',href:'mailto:'+(DADOS.email||'')+'?subject='+encodeURIComponent('Vi seu portfólio: quero conversar sobre '+sobre+' pra minha marca')};
+  return {tipo:'email',rotulo:t('emailRotulo'),href:'mailto:'+(D.email||'')+'?subject='+encodeURIComponent(t('emailAssunto',{assunto:sobre}))};
 }
-function linkInstagram(){var u=String(DADOS.instagram||'').replace(/^@/,'').trim();return u?'https://instagram.com/'+u:'';}
+function linkInstagram(){var u=String(D.instagram||'').replace(/^@/,'').trim();return u?'https://instagram.com/'+u:'';}
 
 /* ---------- blocos de mídia ---------- */
 function blocoFoto(src,alt,dica){
@@ -416,9 +501,9 @@ function blocoVideo(v,dica,primeiro){
   var arquivo=v.video||'';
   var yt=idYoutube(arquivo);
   var ehMp4=/\.mp4$/i.test(arquivo)&&!/^https?:\/\/(www\.)?(instagram|tiktok|drive\.google|vm\.tiktok)/i.test(arquivo);
-  var h='<div class="vid lacuna" tabindex="0" role="button" data-video="'+esc(ehMp4?arquivo:'')+'" data-yt="'+esc(yt)+'" data-titulo="'+esc(v.titulo||yt||arquivo)+'" aria-label="'+esc('Abrir vídeo '+(v.titulo||''))+'">';
+  var h='<div class="vid lacuna" tabindex="0" role="button" data-video="'+esc(ehMp4?arquivo:'')+'" data-yt="'+esc(yt)+'" data-titulo="'+esc(v.titulo||yt||arquivo)+'" aria-label="'+esc(t('abrirVideo')+(v.titulo||''))+'">';
   if(v.res) h+='<span class="res">'+esc(v.res)+'</span>';
-  h+='<div class="dica">'+ICO.video+'<span>'+esc(dica)+'</span><small>'+esc(ehMp4||yt?arquivo:(arquivo?'Link não toca aqui: falta o arquivo .mp4':'falta o arquivo .mp4'))+'</small></div>';
+  h+='<div class="dica">'+ICO.video+'<span>'+esc(dica)+'</span><small>'+esc(ehMp4||yt?arquivo:(arquivo?t('linkNaoToca'):t('semMp4')))+'</small></div>';
   if(yt){
     /* vídeo do YouTube: mostra a capa do vídeo e abre o player do YouTube ao clicar */
     /* capa vertical em alta (1080x1920); se o YouTube não tiver, usa a capa comum */
@@ -479,66 +564,73 @@ function fecharPlayer(){
 
 /* ---------- seções ---------- */
 function montarMenu(){
-  var itens=[['sobre','Sobre mim'],['destaques','Destaques'],['nichos','Nichos']];
-  if(DADOS.mostrarElogios) itens.push(['marcas','O que as marcas falam']);
-  itens.push(['servicos','Serviços'],['galeria','Galeria'],['contato','Contato']);
-  $('menu').innerHTML='<a class="logo" href="#capa">'+esc(DADOS.nome)+'<i>✸</i></a>'
-    +'<nav class="links" id="links">'+itens.map(function(i){return '<a href="#'+i[0]+'">'+i[1]+'</a>';}).join('')+'</nav>'
-    +'<button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="links">Menu</button>'
-    +'<a class="btn b-amarelo" href="#contato">Bora trabalhar →</a>';
+  var itens=[['sobre',t('menuSobre')],['destaques',t('menuDestaques')],['nichos',t('menuNichos')]];
+  if(D.mostrarElogios) itens.push(['marcas',t('menuMarcas')]);
+  itens.push(['galeria',t('menuGaleria')],['servicos',t('menuServicos')],['contato',t('menuContato')]);
+  $('menu').innerHTML='<a class="logo" href="#capa">'+esc(D.nome)+'<i>✸</i></a>'
+    +'<nav class="links" id="links">'+itens.map(function(i){return '<a href="#'+i[0]+'">'+esc(i[1])+'</a>';}).join('')+'</nav>'
+    +'<div class="idioma" role="group" aria-label="'+t('idioma')+'">'
+    +'<button type="button" data-l="pt" lang="pt-BR" aria-pressed="'+(LANG==='pt')+'" title="Português">PT</button>'
+    +'<button type="button" data-l="en" lang="en" aria-pressed="'+(LANG==='en')+'" title="English">EN</button></div>'
+    +'<button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="links">'+t('menu')+'</button>'
+    +'<a class="btn b-amarelo" href="#contato">'+t('cta')+'</a>';
   var b=$('menu-btn'), l=$('links');
-  b.addEventListener('click',function(){var a=l.classList.toggle('aberto'); b.setAttribute('aria-expanded',a); b.textContent=a?'Fechar':'Menu';});
-  l.addEventListener('click',function(e){ if(e.target.tagName==='A'){l.classList.remove('aberto'); b.setAttribute('aria-expanded',false); b.textContent='Menu';} });
+  b.addEventListener('click',function(){var a=l.classList.toggle('aberto'); b.setAttribute('aria-expanded',a); b.textContent=a?t('fechar'):t('menu');});
+  l.addEventListener('click',function(e){ if(e.target.tagName==='A'){l.classList.remove('aberto'); b.setAttribute('aria-expanded',false); b.textContent=t('menu');} });
+  $('menu').querySelector('.idioma').addEventListener('click',function(e){
+    var bt=e.target.closest('button'); if(bt&&bt.dataset.l!==LANG) trocarIdioma(bt.dataset.l);
+  });
 }
 function provasHTML(){
-  return (DADOS.provas||[]).map(function(p){
-    return '<div class="prova"><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="Preencha em DADOS.provas">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';
+  return (D.provas||[]).map(function(p){
+    return '<div class="prova"><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="'+t('preencha')+'">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';
   }).join('');
 }
 function montarCapa(){
-  var palavras=String(DADOS.nome||'').trim().split(/\s+/).map(function(p){return '<span>'+esc(p)+'</span>';}).join('');
+  var palavras=String(D.nome||'').trim().split(/\s+/).map(function(p){return '<span>'+esc(p)+'</span>';}).join('');
   $('capa-conteudo').innerHTML=
    '<div class="capa-esq">'
-   +'<p class="rotulo">UGC creator de '+esc(DADOS.nichosResumo)+'</p>'
+   +'<p class="rotulo">'+t('ugcDe')+esc(D.nichosResumo)+'</p>'
    +'<h1 class="nome">'+palavras+'</h1>'
-   +seloGirando(DADOS.seloCapa||'SUA CREATOR ✸ SUA CREATOR ✸','#E5482A','#FBF6EA','#FBF6EA','selo')
+   +seloGirando(D.seloCapa||'SUA CREATOR ✸ SUA CREATOR ✸','#E5482A','#FBF6EA','#FBF6EA','selo')
    +'<svg class="pincelada" viewBox="0 0 340 26" preserveAspectRatio="none" aria-hidden="true"><path d="M4 15C60 4 120 20 180 10s110-4 156 3c-50 6-100 2-160 8S60 24 4 15z" fill="#E5482A"/></svg>'
-   +'<p class="frase">'+esc(DADOS.frase)+'</p>'
-   +(DADOS.mostrarProvas?'<div class="provas">'+provasHTML()+'</div>':'<div style="height:26px"></div>')
-   +'<div class="acoes"><a class="btn b-amarelo" href="#destaques">Ver meus melhores vídeos →</a><a class="btn b-contorno" href="#contato">Falar comigo →</a></div>'
+   +'<p class="frase">'+esc(D.frase)+'</p>'
+   +(D.mostrarProvas?'<div class="provas">'+provasHTML()+'</div>':'<div style="height:26px"></div>')
+   +'<div class="acoes"><a class="btn b-amarelo" href="#destaques">'+t('verVideos')+'</a><a class="btn b-contorno" href="#contato">'+t('falarComigo')+'</a></div>'
    +'</div>'
    +'<div class="arte">'
    +'<svg class="borrao" viewBox="0 0 500 560" preserveAspectRatio="none" aria-hidden="true"><path d="M72 96C150 22 330 10 420 70c70 48 74 150 52 240-20 84 6 150-70 200-84 54-230 44-310-14C18 440 30 350 34 270 38 200 14 150 72 96z" fill="#F2B416"/></svg>'
    +'<div class="pontos" aria-hidden="true"></div>'
-   +'<div class="foto lacuna">'+blocoFoto(DADOS.fotoCapa,'Foto de '+DADOS.nome,'Retrato com rosto, luz natural e ambiente real. Sem selfie: a capa mostra o seu nível')+'</div>'
+   +'<div class="foto lacuna">'+blocoFoto(D.fotoCapa,t('fotoDe')+D.nome,t('dicaCapa'))+'</div>'
    +'<svg class="olho" viewBox="0 0 120 90" fill="none" stroke="#E5482A" stroke-width="5" stroke-linecap="round" aria-hidden="true"><path d="M8 56C30 28 90 28 112 56 90 82 30 82 8 56z"/><circle cx="60" cy="56" r="13" fill="#E5482A"/><path d="M24 34l-8-14M44 26l-4-16M64 24l2-17M84 28l8-14M100 38l11-11"/></svg>'
    +'<svg class="risco" viewBox="0 0 140 50" aria-hidden="true"><path d="M6 34C40 10 70 44 100 20c12-9 22-10 34-6-10 3-18 8-28 16C76 54 44 22 6 34z" fill="#151515"/></svg>'
    +'</div>';
 }
 function montarSobre(){
-  var txt=DADOS.sobreTexto||[];
+  var txt=D.sobreTexto||[];
   if(typeof txt==='string') txt=txt?[txt]:[];
   var textoHTML=txt.length?txt.map(function(p){return '<p>'+esc(p)+'</p>';}).join('')
-    :'<p class="lacuna-txt"><b>Seu texto entra aqui.</b> Em primeira pessoa e curto: quem você é, onde mora ('+esc(DADOS.cidade)+'), sua rotina e por que as marcas do seu nicho combinam com você. Troque em DADOS.sobreTexto.</p>';
+    :'<p class="lacuna-txt">'+t('sobreVazio')+'</p>';
   $('sobre-conteudo').innerHTML=
    '<div class="sobre-arte"><div class="faixa-v" aria-hidden="true"></div>'
-   +'<div class="sobre-foto lacuna">'+blocoFoto(DADOS.fotoSobre,DADOS.nome+' no dia a dia','Você trabalhando no dia a dia: gravando, editando ou com o produto na mão')+'</div>'
+   +'<div class="sobre-foto lacuna">'+blocoFoto(D.fotoSobre,D.nome+t('sobreAlt'),t('dicaSobre'))+'</div>'
    +'<svg class="coroa" viewBox="0 0 100 70" fill="none" stroke="#151515" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 58L6 16l24 22L50 8l20 30 24-22-4 42z"/><path d="M12 66c26-4 52-4 78 0"/></svg>'
    +'</div>'
-   +'<div class="sobre-txt"><p class="rotulo">Sobre mim</p>'
-   +'<h2>Conteúdo com estratégia. Vídeo com <span class="mao">alma.'+RABISCO+'</span></h2>'
+   +'<div class="sobre-txt"><p class="rotulo">'+t('sobreRotulo')+'</p>'
+   +'<h2>'+t('sobreTitulo')+'<span class="mao">'+t('sobreMao')+RABISCO+'</span></h2>'
    +textoHTML
-   +'<div class="sobre-fim"><span class="assinatura">'+esc(DADOS.nome)+'</span>'
-   +'<div class="circulo"><i>✸</i>'+esc(DADOS.selo)+'</div></div></div>';
+   +'<div class="sobre-fim"><span class="assinatura">'+esc(D.nome)+'</span>'
+   +'<div class="circulo"><i>✸</i>'+esc(D.selo)+'</div></div></div>';
 
-  $('faixa-preta').innerHTML='<h3>O que eu faço pela sua marca</h3><div class="difs">'
-   +(DADOS.diferenciais||[]).map(function(d,i){return '<div class="dif">'+(ICO.difs[i%3])+'<h4>'+esc(d.titulo)+'</h4><p>'+esc(d.texto)+'</p></div>';}).join('')
-   +'</div>'+(DADOS.mostrarProvas?'<div class="numeros">'
-   +(DADOS.provas||[]).map(function(p){return '<div><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="Preencha em DADOS.provas">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';}).join('')
+  $('faixa-preta').innerHTML='<h3>'+t('faixaPreta')+'</h3><div class="difs">'
+   +(D.diferenciais||[]).map(function(d,i){return '<div class="dif">'+(ICO.difs[i%3])+'<h4>'+esc(d.titulo)+'</h4><p>'+esc(d.texto)+'</p></div>';}).join('')
+   +'</div>'+(D.mostrarProvas?'<div class="numeros">'
+   +(D.provas||[]).map(function(p){return '<div><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="'+t('preencha')+'">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';}).join('')
    +'</div>':'');
+  document.querySelector('.rolo').setAttribute('aria-label',t('marcasAtendidas'));
 }
 function montarRolo(){
-  var grupo=(DADOS.marcas||[]).map(function(m){
+  var grupo=(D.marcas||[]).map(function(m){
     var nome=typeof m==='string'?m:m.nome, logo=typeof m==='string'?'':m.logo;
     return '<span>'+(logo?'<img src="'+caminho(logo)+'" alt="'+esc(nome)+'" onerror="this.replaceWith(document.createTextNode(this.alt))">':esc(nome))+'</span>';
   }).join('');
@@ -547,59 +639,60 @@ function montarRolo(){
   $('rolo').innerHTML='<div class="rolo-grupo">'+bloco+'</div><div class="rolo-grupo" aria-hidden="true">'+bloco+'</div>';
 }
 function montarDestaques(){
-  var lista=(DADOS.destaques||[]).slice(0,3);
+  var lista=(D.destaques||[]).slice(0,3);
   $('destaques-conteudo').innerHTML=
-   '<div><p class="rotulo">Destaques</p><h2>Meus melhores vídeos</h2>'
+   '<div><p class="rotulo">'+t('destRotulo')+'</p><h2>'+t('destTitulo')+'</h2>'
    +'<svg class="onda" viewBox="0 0 150 18" aria-hidden="true"><path d="M3 9c12-10 24 10 36 0s24 10 36 0 24 10 36 0 24 10 36 0" fill="none" stroke="#E5482A" stroke-width="4" stroke-linecap="round"/></svg>'
-   +'<p>Clique pra assistir com som.</p>'
-   +'<a class="btn b-amarelo" href="#nichos">Ver por nicho →</a></div>'
+   +'<p>'+t('destTexto')+'</p>'
+   +'<a class="btn b-amarelo" href="#nichos">'+t('verNicho')+'</a></div>'
    +'<div class="dest-lista">'+lista.map(function(v,i){
-      return '<article class="card"><div class="moldura">'+blocoVideo(v,'Os melhores na frente, não os mais recentes',i===0)+'</div>'
+      return '<article class="card"><div class="moldura">'+blocoVideo(v,t('dicaDest'),i===0)+'</div>'
         +'<div class="legenda"><span>'+esc(v.titulo)+'</span><span aria-hidden="true">→</span></div>'
-        +'<div class="sub">'+(v.nicho?esc(v.nicho):'<span class="falta">nicho?</span>')+' · '+(v.formato?esc(v.formato):'<span class="falta">formato?</span>')+'</div></article>';
+        +'<div class="sub">'+(v.nicho?esc(v.nicho):'<span class="falta">'+t('faltaNicho')+'</span>')+' · '+(v.formato?esc(v.formato):'<span class="falta">'+t('faltaFormato')+'</span>')+'</div></article>';
      }).join('')+'</div>';
   ligarVideos($('destaques-conteudo'));
 }
 var nichoAtual=0;
 function montarNichos(){
-  var ns=DADOS.nichos||[];
-  $('nichos-conteudo').innerHTML='<p class="rotulo">Conteúdo por nichos</p>'
-   +'<h2>Ache o vídeo do <span class="mao">seu nicho'+RABISCO+'</span></h2>'
+  var ns=D.nichos||[];
+  $('nichos-conteudo').innerHTML='<p class="rotulo">'+t('nichoRotulo')+'</p>'
+   +'<h2>'+t('nichoTitulo')+'<span class="mao">'+t('nichoMao')+RABISCO+'</span></h2>'
    +'<div class="abas" role="tablist">'+ns.map(function(n,i){return '<button class="aba" type="button" role="tab" data-i="'+i+'" aria-selected="false">'+esc(n.nome)+'</button>';}).join('')+'</div>'
    +'<div class="nicho-grade" id="nicho-grade" role="tabpanel"></div>';
   $('nichos-conteudo').querySelector('.abas').addEventListener('click',function(e){
     var b=e.target.closest('.aba'); if(b) abrirNicho(+b.dataset.i);
   });
-  if(ns.length) abrirNicho(0);
+  if(ns.length) abrirNicho(Math.min(nichoAtual,ns.length-1));
 }
 function abrirNicho(i){
-  var ns=DADOS.nichos||[], n=ns[i]; if(!n) return;
+  var ns=D.nichos||[], n=ns[i]; if(!n) return;
   nichoAtual=i;
   Array.prototype.forEach.call(document.querySelectorAll('.aba'),function(b){b.setAttribute('aria-selected',+b.dataset.i===i?'true':'false');});
   /* mostra só os vídeos que o nicho tem (se não tiver nenhum, um espaço listrado) */
-  var videos=(n.videos||[]).filter(function(v){return v&&v.video;}), pasta='midia/nichos/'+slug(n.nome)+'/';
+  var videos=(n.videos||[]).filter(function(v){return v&&v.video;}), pasta='midia/nichos/'+slug((DADOS.nichos[i]||n).nome)+'/';
   if(!videos.length) videos=[{titulo:'',video:''}];
   var grade=$('nicho-grade');
   grade.innerHTML=videos.map(function(v){
-    return '<div>'+blocoVideo(v,'Vídeo de '+n.nome+' em '+pasta,false)
+    return '<div>'+blocoVideo(v,t('videoDe')+n.nome+t('em')+pasta,false)
       +(v.titulo?'<div class="legenda"><span>'+esc(v.titulo)+'</span><span aria-hidden="true">→</span></div>':'')
       +(v.formato?'<div class="sub">'+esc(v.formato)+'</div>':'')+'</div>';
   }).join('');
   ligarVideos(grade);
 }
 function montarFalam(){
-  /* seção oculta enquanto DADOS.mostrarElogios for false (fica guardada pra usar depois) */
-  if(!DADOS.mostrarElogios){ $('marcas').hidden=true; return; }
-  var el=(DADOS.elogios||[]).slice(0,3);
+  /* seção oculta enquanto D.mostrarElogios for false (fica guardada pra usar depois) */
+  $('marcas').hidden=!D.mostrarElogios;
+  if(!D.mostrarElogios) return;
+  var el=(D.elogios||[]).slice(0,3);
   while(el.length<3) el.push({texto:'',marca:'',detalhe:''});
   $('falam-conteudo').innerHTML=
-   '<div class="falam-topo"><span class="aspas" aria-hidden="true">“</span><h2>O que as marcas falam</h2>'
+   '<div class="falam-topo"><span class="aspas" aria-hidden="true">“</span><h2>'+t('falamTitulo')+'</h2>'
    +seloGirando('FEEDBACK ✸ REAL ✸ FEEDBACK ✸ REAL ✸','#FFFFFF','#151515','#FFFFFF','selo-b')+'</div>'
    +'<div class="elogios">'+el.map(function(x){
-      if(!x.texto) return '<div class="elogio"><div class="elogio-vazio">'+ICO.balao+'<span>cole aqui a frase ou o print real da marca</span></div></div>';
+      if(!x.texto) return '<div class="elogio"><div class="elogio-vazio">'+ICO.balao+'<span>'+t('falamVazio')+'</span></div></div>';
       return '<div class="elogio"><blockquote>“'+esc(x.texto)+'”</blockquote><b>'+esc(x.marca)+'</b>'+(x.detalhe?'<span>'+esc(x.detalhe)+'</span>':'')+'</div>';
      }).join('')+'</div>'
-   +'<div class="atendidas"><p>Marcas que já atendi</p><ul>'+(DADOS.marcas||[]).map(function(m){return '<li>'+esc(typeof m==='string'?m:m.nome)+'</li>';}).join('')+'</ul></div>';
+   +'<div class="atendidas"><p>'+t('jaAtendi')+'</p><ul>'+(D.marcas||[]).map(function(m){return '<li>'+esc(typeof m==='string'?m:m.nome)+'</li>';}).join('')+'</ul></div>';
 }
 var ICO_SERV={
   alvo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
@@ -607,7 +700,7 @@ var ICO_SERV={
   megafone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10v4h4l7 4V6L7 10z"/><path d="M17 9a4 4 0 0 1 0 6M7 14l1 5h3l-1-4"/></svg>'
 };
 function montarServicos(){
-  var s=DADOS.servicos||{}; var itens=s.itens||[];
+  var s=D.servicos||{}; var itens=s.itens||[];
   if(!itens.length){ $('servicos').hidden=true; return; }
   var titulo=esc(s.titulo||''), m=esc(s.palavraMao||'');
   if(m&&titulo.indexOf(m)>-1) titulo=titulo.replace(m,'<span class="mao">'+m+RABISCO+'</span>');
@@ -620,17 +713,17 @@ function montarServicos(){
         +'<span class="ico" aria-hidden="true">'+(ICO_SERV[x.icone]||ICO_SERV.alvo)+'</span>'
         +'<h3>'+esc(x.titulo)+'</h3><p>'+esc(x.texto)+'</p>'
         +'<ul>'+(x.lista||[]).map(function(l){return '<li>'+esc(l)+'</li>';}).join('')+'</ul>'
-        +'<a class="btn '+(x.selo?'b-amarelo':'b-contorno')+'" href="'+esc(c.href)+'" target="_blank" rel="noopener">Quero esse →</a>'
+        +'<a class="btn '+(x.selo?'b-amarelo':'b-contorno')+'" href="'+esc(c.href)+'" target="_blank" rel="noopener">'+t('queroEsse')+'</a>'
         +'</article>';
      }).join('')+'</div>';
 }
 function montarGaleria(){
-  var g=DADOS.galeria||{}; var fotos=g.fotos||[];
+  var g=D.galeria||{}; var fotos=g.fotos||[];
   if(!fotos.length){ $('galeria').hidden=true; return; }
   var titulo=esc(g.titulo||''), m=esc(g.palavraMao||'');
   if(m&&titulo.indexOf(m)>-1) titulo=titulo.replace(m,'<span class="mao">'+m+RABISCO+'</span>');
   var blocos=fotos.map(function(f,i){
-    return '<figure class="foto-g lacuna">'+blocoFoto(f,'Foto '+(i+1)+' da galeria','Foto quadrada, em alta')+'</figure>';
+    return '<figure class="foto-g lacuna">'+blocoFoto(f,t('fotoGaleria',{n:i+1}),t('dicaGaleria'))+'</figure>';
   });
   var pos=Math.min(g.posicaoPalavras==null?8:g.posicaoPalavras,blocos.length);
   if((g.palavras||[]).length) blocos.splice(pos,0,'<div class="palavras" aria-label="'+esc(g.palavras.join(', '))+'">'+g.palavras.map(function(p){return '<span>'+esc(p)+'</span>';}).join('')+'</div>');
@@ -641,21 +734,21 @@ function montarGaleria(){
 }
 function montarContato(){
   var c=linkContato(), insta=linkInstagram();
-  $('duvidas-conteudo').innerHTML='<p class="rotulo">Contato</p><h2>Antes de fechar, as dúvidas rápidas</h2><div class="duvidas">'
-   +(DADOS.duvidas||[]).map(function(d){
-      return '<div class="duvida"><h3>'+esc(d.pergunta)+'</h3>'+(d.resposta?'<p>'+esc(d.resposta)+'</p>':'<p class="lacuna-txt">Escreva sua resposta em DADOS.duvidas</p>')+'</div>';
+  $('duvidas-conteudo').innerHTML='<p class="rotulo">'+t('contatoRotulo')+'</p><h2>'+t('duvidasTitulo')+'</h2><div class="duvidas">'
+   +(D.duvidas||[]).map(function(d){
+      return '<div class="duvida"><h3>'+esc(d.pergunta)+'</h3>'+(d.resposta?'<p>'+esc(d.resposta)+'</p>':'<p class="lacuna-txt">'+t('semResposta')+'</p>')+'</div>';
      }).join('')+'</div>';
 
   var form='';
-  if(DADOS.formspree){
-    var campos=[['nome','Seu nome','text','name'],['empresa','Empresa','text','organization'],['produto','Produto','text','off'],['prazo','Pra quando você precisa?','text','off'],['whatsapp','Seu WhatsApp','tel','tel']];
-    form='<form class="form" id="form"><h3>Pede seu orçamento</h3>'
+  if(D.formspree){
+    var campos=[['nome',t('fNome'),'text','name'],['empresa',t('fEmpresa'),'text','organization'],['produto',t('fProduto'),'text','off'],['prazo',t('fPrazo'),'text','off'],['whatsapp',t('fZap'),'tel','tel']];
+    form='<form class="form" id="form"><h3>'+t('formTitulo')+'</h3>'
       +campos.map(function(f){return '<label>'+f[1]+'<input name="'+f[0]+'" type="'+f[2]+'" autocomplete="'+f[3]+'" required></label>';}).join('')
       +'<input class="gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">'
-      +'<button class="btn b-preto" type="submit">Enviar pedido →</button><div class="erro" id="form-erro" hidden></div></form>';
+      +'<button class="btn b-preto" type="submit">'+t('enviar')+'</button><div class="erro" id="form-erro" hidden></div></form>';
   }
   $('contato-conteudo').innerHTML=
-   '<div><h2>Bora fazer um vídeo que <span class="risca">vende?<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9C40 2 70 12 105 6s60-3 93 2" fill="none" stroke="#151515" stroke-width="4" stroke-linecap="round"/></svg></span></h2>'
+   '<div><h2>'+t('ctaTitulo')+'<span class="risca">'+t('ctaRisca')+'<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9C40 2 70 12 105 6s60-3 93 2" fill="none" stroke="#151515" stroke-width="4" stroke-linecap="round"/></svg></span></h2>'
    +'<div class="acoes"><a class="btn b-preto" href="'+esc(c.href)+'" target="_blank" rel="noopener">'+c.rotulo+' →</a>'
    +(insta?'<a class="btn b-contorno" href="'+esc(insta)+'" target="_blank" rel="noopener">Instagram →</a>':'')+'</div>'
    +'<svg class="explosao" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 6l14 52 40-36-18 50 56-8-46 32 48 28-56 2 26 50-46-32-10 54-16-52-40 38 18-52-56 10 46-34L12 82l56-2-24-50 44 30z" fill="#E5482A" stroke="#151515" stroke-width="4" stroke-linejoin="round"/></svg></div>'
@@ -666,26 +759,26 @@ function montarContato(){
     e.preventDefault();
     if(!f.checkValidity()){f.reportValidity();return;}
     var bt=f.querySelector('button[type=submit]'), erro=$('form-erro');
-    bt.disabled=true; bt.textContent='Enviando...'; erro.hidden=true;
-    fetch(DADOS.formspree,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
-      .then(function(r){ if(!r.ok) throw new Error('erro'); f.innerHTML='<p class="recebi">Recebi! Te chamo em breve.</p>'; })
+    bt.disabled=true; bt.textContent=t('enviando'); erro.hidden=true;
+    fetch(D.formspree,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)})
+      .then(function(r){ if(!r.ok) throw new Error('erro'); f.innerHTML='<p class="recebi">'+t('recebi')+'</p>'; })
       .catch(function(){
-        bt.disabled=false; bt.textContent='Enviar pedido →';
+        bt.disabled=false; bt.textContent=t('enviar');
         erro.hidden=false;
-        erro.innerHTML='Não consegui enviar agora. Me chama direto:<br><a class="btn b-amarelo" href="'+esc(c.href)+'" target="_blank" rel="noopener">'+c.rotulo+' →</a>';
+        erro.innerHTML=t('erroEnvio')+'<br><a class="btn b-amarelo" href="'+esc(c.href)+'" target="_blank" rel="noopener">'+c.rotulo+' →</a>';
       });
   });
 
-  $('rodape').innerHTML='<span class="logo">'+esc(DADOS.nome)+'<i>✸</i></span><span>UGC creator · aluno da Rafa Chagas</span>';
+  $('rodape').innerHTML='<span class="logo">'+esc(D.nome)+'<i>✸</i></span><span class="rodape-cargo">'+t('rodape')+'</span><span class="copy">© '+esc(D.anoCopyright||'2026')+' '+esc(D.nome)+'</span>';
   var z=$('zap'); z.href=c.href; z.innerHTML=c.tipo==='whatsapp'?ICO.zap:ICO.balao; z.setAttribute('aria-label',c.rotulo);
 }
 
-/* ---------- métricas (Umami): só liga se DADOS.umami tiver o ID ---------- */
+/* ---------- métricas (Umami): só liga se D.umami tiver o ID ---------- */
 function ligarUmami(){
-  if(!DADOS.umami) return;
+  if(!D.umami) return;
   var s=document.createElement('script');
   s.src='https://cloud.umami.is/script.js';
-  s.setAttribute('data-website-id',DADOS.umami);
+  s.setAttribute('data-website-id',D.umami);
   s.defer=true;
   document.head.appendChild(s);
 }
@@ -695,9 +788,10 @@ function abrirNichoDoLink(){
   var c='';
   try{ c=new URLSearchParams(location.search).get('c')||''; }catch(e){}
   if(!c) return;
-  var alvo=slug(c), ns=DADOS.nichos||[];
+  /* aceita o nome do nicho em português ou em inglês */
+  var alvo=slug(c), ns=DADOS.nichos||[], en=(DADOS_EN.nichos||[]);
   for(var i=0;i<ns.length;i++){
-    if(slug(ns[i].nome)===alvo){
+    if(slug(ns[i].nome)===alvo||(en[i]&&slug(en[i].nome)===alvo)){
       abrirNicho(i);
       setTimeout(function(){ $('nichos').scrollIntoView({behavior:SEM_ANIMACAO?'auto':'smooth'}); },150);
       return;
@@ -705,9 +799,32 @@ function abrirNichoDoLink(){
   }
 }
 
-function montar(){
-  document.title=DADOS.nome+' · portfólio UGC';
+/* monta (ou remonta) todo o conteúdo no idioma atual */
+function montarConteudo(){
+  document.title=D.nome+t('tituloPagina');
+  $('player').setAttribute('aria-label',t('player'));
+  $('player-x').setAttribute('aria-label',t('fechar'));
+  $('player-yt').setAttribute('title',t('videoYt'));
   montarMenu(); montarCapa(); montarSobre(); montarRolo(); montarDestaques(); montarNichos(); montarFalam(); montarServicos(); montarGaleria(); montarContato();
+}
+/* troca de idioma pelo botão PT/EN: guarda a escolha e põe ?lang=en no link */
+function trocarIdioma(l){
+  var y=window.scrollY;
+  aplicarIdioma(l);
+  montarConteudo();
+  window.scrollTo(0,y);
+  try{ localStorage.setItem('idioma',LANG); }catch(e){}
+  try{ var u=new URL(location.href); if(LANG==='en') u.searchParams.set('lang','en'); else u.searchParams.delete('lang'); history.replaceState(null,'',u.toString()); }catch(e){}
+  var bt=document.querySelector('.idioma button[data-l="'+LANG+'"]'); if(bt) bt.focus();
+}
+function idiomaInicial(){
+  try{ var q=new URLSearchParams(location.search).get('lang'); if(q) return q.toLowerCase().indexOf('en')===0?'en':'pt'; }catch(e){}
+  try{ var s=localStorage.getItem('idioma'); if(s) return s; }catch(e){}
+  return 'pt';
+}
+function montar(){
+  aplicarIdioma(idiomaInicial());
+  montarConteudo();
   $('player-x').addEventListener('click',fecharPlayer);
   $('player').addEventListener('click',function(e){ if(e.target===this) fecharPlayer(); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&$('player').classList.contains('aberto')) fecharPlayer(); });
@@ -730,6 +847,8 @@ const DADOS = {
   email: "ugc.aday@gmail.com",
   // Cidade onde você mora
   cidade: "Sorocaba - SP",
+  // Ano que aparece no rodapé, depois do ©
+  anoCopyright: "2026",
   // Link do portfólio publicado. Se mudar, troque também lá no topo do arquivo (og:url e og:image)
   site: "https://ugc-aday.github.io/portfolio/",
   // Endereço do seu formulário no Formspree (ex.: "https://formspree.io/f/abcdwxyz"). Vazio = sem formulário
@@ -808,7 +927,7 @@ const DADOS = {
       { titulo: "Publi post", texto: "Sua marca no meu perfil, falando com quem já confia em mim.", lista: ["Reels", "Stories", "TikTok"], selo: "", icone: "megafone" }
     ]
   },
-  // Galeria de fotos (fundo preto, antes do Contato). Fotos quadradas em midia/galeria.
+  // Galeria de fotos (fundo preto, antes de Serviços). Fotos quadradas em midia/galeria.
   // palavras: o quadrinho amarelo com texto, que entra na posição "posicaoPalavras" (contando a partir de 0)
   galeria: {
     rotulo: "Galeria",
@@ -846,6 +965,69 @@ const DADOS = {
     { pergunta: "Por quanto tempo?", resposta: "No perfil da marca, o vídeo fica sem prazo. Para anúncios, a licença padrão é de 6 meses, e renovar é simples. Tudo vai por escrito no orçamento, sem letra miúda." },
     { pergunta: "Tem exclusividade?", resposta: "Não é obrigatória, e isso deixa o seu orçamento mais leve. Se a sua marca precisa que eu não grave pra concorrentes diretos por um período, eu incluo no combinado." },
     { pergunta: "Qual o prazo?", resposta: "Até 7 dias úteis depois que o produto chega e você aprova o roteiro. Nada é gravado sem o seu ok, e uma rodada de ajustes já está incluída." }
+  ]
+};
+
+/* =====================================================================
+   DADOS_EN: A VERSÃO EM INGLÊS (aparece quando a pessoa clica em EN).
+   Aqui ficam só os textos. Links, fotos e vídeos vêm do DADOS acima.
+   As listas seguem a MESMA ORDEM do DADOS: o 1º item daqui traduz o 1º de lá.
+   Se mudar um texto em português, mude aqui também.
+   ===================================================================== */
+const DADOS_EN = {
+  nichosResumo: "food, home, self-care, tech and pet brands",
+  frase: "I'm a communicator at heart! I love people, building real connections and creating content people see themselves in. I bring that energy to every project I take on.",
+  provas: [
+    { texto: "videos created" },
+    { texto: "brands served" },
+    { texto: "turnaround" }
+  ],
+  sobreTexto: [
+    "Hi, I'm Day! I'm a communicator based in Sorocaba, Brazil, and there's one thing I know for sure: people buy from people. That's why I love starting conversations, building connections and making viewers think, \"wait, that's so me.\"",
+    "Home, food, tech and pets are part of my everyday life, and that's exactly how your product shows up in my videos: the way it fits into your customer's life. Natural, easygoing and never salesy.",
+    "From script to final cut, I handle it all with strategy and plenty of good energy. You get a video that's ready to run, and your customers get a real reason to trust your brand."
+  ],
+  selo: "Communication that connects and converts.",
+  seloCapa: "YOUR CREATOR ✸ YOUR CREATOR ✸",
+  diferenciais: [
+    { titulo: "I study your customer's pain points", texto: "Before I film anything, I dig into what your customers actually struggle with." },
+    { titulo: "Script approved upfront", texto: "I write the script, and your brand signs off before I hit record." },
+    { titulo: "Ad-ready editing", texto: "Delivered with a strong hook and clean audio, ready to run." }
+  ],
+  destaques: [
+    { titulo: "Candura", nicho: "home & decor", formato: "routine" },
+    { titulo: "Predlecta is life!", nicho: "food", formato: "routine" },
+    { titulo: "Life with Claude", nicho: "tech", formato: "routine" }
+  ],
+  nichos: [
+    { nome: "food", videos: [ { titulo: "Predlecta" } ] },
+    { nome: "home & decor", videos: [ { titulo: "Candura: your home, sorted!" } ] },
+    { nome: "self-care", videos: [ { titulo: "Boticário" } ] },
+    { nome: "tech", videos: [ { titulo: "Claude" } ] },
+    { nome: "pets", videos: [ { titulo: "Petlove" } ] },
+    { nome: "education", videos: [ { titulo: "All about Talk N Talk!" } ] }
+  ],
+  servicos: {
+    rotulo: "Services",
+    titulo: "What can we create together?",
+    palavraMao: "create",
+    itens: [
+      { titulo: "Performance ad creatives", texto: "Ads for Meta, TikTok and YouTube, built to lower your CPA.", lista: ["Meta", "TikTok", "YouTube"], selo: "Most popular" },
+      { titulo: "UGC for e-commerce", texto: "Product videos that feel like they came from a real customer, so your store sells every day.", lista: ["Reviews", "Unboxings", "Real-life use"] },
+      { titulo: "Sponsored posts", texto: "Your brand on my profile, in front of people who already trust me.", lista: ["Reels", "Stories", "TikTok"] }
+    ]
+  },
+  galeria: {
+    rotulo: "Gallery",
+    titulo: "Product in hand, real life on camera",
+    palavraMao: "real life",
+    palavras: ["home", "self-care", "pet lover", "tech"]
+  },
+  duvidas: [
+    { pergunta: "Where can I use the content?", resposta: "On your brand's social media, website and ads (Meta, TikTok and more). Videos are delivered in 9:16, watermark-free and ready to post. TV and offline media can be arranged separately." },
+    { pergunta: "How long can I use it?", resposta: "On your brand's own profile, there's no time limit. For paid ads, the standard license is 6 months, and renewing is easy. Everything is spelled out in the quote, no fine print." },
+    { pergunta: "Do you offer exclusivity?", resposta: "It's not required, which keeps your quote lower. If your brand needs me to stay away from direct competitors for a while, I'll build it into our agreement." },
+    { pergunta: "What's the turnaround?", resposta: "Up to 7 business days after the product arrives and you approve the script. Nothing gets filmed without your OK, and one round of revisions is included." }
   ]
 };
 
