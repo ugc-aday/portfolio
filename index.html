@@ -88,7 +88,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,44px);lin
 .pontos{position:absolute;right:-5%;bottom:6%;width:96px;height:96px;background:radial-gradient(var(--preto) 2.4px,transparent 2.6px) 0 0/16px 16px}
 .foto{position:absolute;inset:4% 6%;border:3px solid var(--preto);border-radius:16px;overflow:hidden;transform:rotate(1.6deg)}
 .foto img,.sobre-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.olho{position:absolute;left:-7%;top:3%;width:96px}
+.foto img{object-position:50% 60%}.olho{position:absolute;left:-7%;top:3%;width:96px}
 .risco{position:absolute;right:-6%;top:11%;width:120px}
 
 /* SOBRE */
@@ -430,7 +430,7 @@ function montarCapa(){
    +seloGirando('BRILHO ✸ ALUNO RAFA CHAGAS ✸','#E5482A','#FBF6EA','#FBF6EA','selo')
    +'<svg class="pincelada" viewBox="0 0 340 26" preserveAspectRatio="none" aria-hidden="true"><path d="M4 15C60 4 120 20 180 10s110-4 156 3c-50 6-100 2-160 8S60 24 4 15z" fill="#E5482A"/></svg>'
    +'<p class="frase">'+esc(DADOS.frase)+'</p>'
-   +'<div class="provas">'+provasHTML()+'</div>'
+   +(DADOS.mostrarProvas?'<div class="provas">'+provasHTML()+'</div>':'<div style="height:26px"></div>')
    +'<div class="acoes"><a class="btn b-amarelo" href="#destaques">Ver meus melhores vídeos →</a><a class="btn b-contorno" href="#contato">Falar comigo →</a></div>'
    +'</div>'
    +'<div class="arte">'
@@ -459,7 +459,7 @@ function montarSobre(){
 
   $('faixa-preta').innerHTML='<h3>O que eu faço pela sua marca</h3><div class="difs">'
    +(DADOS.diferenciais||[]).map(function(d,i){return '<div class="dif">'+(ICO.difs[i%3])+'<h4>'+esc(d.titulo)+'</h4><p>'+esc(d.texto)+'</p></div>';}).join('')
-   +'</div><div class="numeros">'
+   +'</div><div class="numeros"'+(DADOS.mostrarProvas?'':' style="display:none"')+'>'
    +(DADOS.provas||[]).map(function(p){return '<div><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="Preencha em DADOS.provas">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';}).join('')
    +'</div>';
 }
@@ -628,7 +628,7 @@ const DADOS = {
   // Frase curta do que você faz pela marca
   frase: "Eu sou da Comunicação! Gosto de gente e amo fazer conexões e gerar identificação! Amo transmitir essa energia em todos os meus trabalhos.",
   // Os 3 números da capa. Preencha "numero" (ex.: "120+", "6", "5 dias")
-  provas: [
+  mostrarProvas: false, provas: [
     { numero: "", texto: "vídeos gravados" },
     { numero: "", texto: "marcas atendidas" },
     { numero: "", texto: "prazo de entrega" }
@@ -637,9 +637,9 @@ const DADOS = {
   fotoCapa: "midia/capa.jpg",
   fotoSobre: "midia/sobre.jpg",
   // Texto do Sobre mim, em primeira pessoa. Cada item entre aspas é um parágrafo. Ex.: ["Parágrafo 1", "Parágrafo 2"]
-  sobreTexto: [],
+  sobreTexto: ["Oi, eu sou a Day! Sou da Comunicação, moro em Sorocaba (SP) e tenho uma certeza: gente compra de gente. Por isso eu amo conversar, criar conexão e fazer quem assiste pensar “nossa, sou eu”.", "Casa, comida, tecnologia e pet são assuntos do meu dia a dia, e é assim que o seu produto aparece nos meus vídeos: do jeito que ele entra na vida do seu cliente. Natural, leve e sem cara de propaganda.", "Do roteiro à edição, eu cuido de tudo com estratégia e muita boa energia. Você recebe um vídeo pronto pra rodar, e o seu cliente ganha um bom motivo pra confiar na sua marca."],
   // Texto do círculo amarelo no Sobre mim
-  selo: "Formado no Método Profissão do Futuro · aluno da Rafa Chagas",
+  selo: "Gente de verdade vende de verdade",
   // Seus 3 diferenciais (faixa preta)
   diferenciais: [
     { titulo: "Estudo a dor do cliente", texto: "Antes de gravar, eu estudo a dor do cliente da sua marca." },
@@ -695,10 +695,10 @@ const DADOS = {
   ],
   // As 4 dúvidas do contato. Escreva a sua resposta em "resposta"
   duvidas: [
-    { pergunta: "Onde posso usar o conteúdo?", resposta: "" },
-    { pergunta: "Por quanto tempo?", resposta: "" },
-    { pergunta: "Tem exclusividade?", resposta: "" },
-    { pergunta: "Qual o prazo?", resposta: "" }
+    { pergunta: "Onde posso usar o conteúdo?", resposta: "Nas redes sociais, no site e nos anúncios da sua marca (Meta, TikTok e afins). O vídeo chega em 9:16, sem marca d'água, pronto pra subir. TV e mídia offline a gente combina à parte." },
+    { pergunta: "Por quanto tempo?", resposta: "No perfil da marca, o vídeo fica sem prazo. Para anúncios, a licença padrão é de 6 meses, e renovar é simples. Tudo vai por escrito no orçamento, sem letra miúda." },
+    { pergunta: "Tem exclusividade?", resposta: "Não é obrigatória, e isso deixa o seu orçamento mais leve. Se a sua marca precisa que eu não grave pra concorrentes diretos por um período, eu incluo no combinado." },
+    { pergunta: "Qual o prazo?", resposta: "Até 7 dias úteis depois que o produto chega e você aprova o roteiro. Nada é gravado sem o seu ok, e uma rodada de ajustes já está incluída." }
   ]
 };
 
