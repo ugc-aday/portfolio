@@ -225,22 +225,23 @@ footer .copy{color:#cfc7b6}
 .servicos-topo .rotulo::before,.servicos-topo .rotulo::after{content:"";width:28px;height:2px;background:var(--vermelho)}
 .servicos-topo h2{margin-top:12px}
 .servicos-topo .estrela{position:absolute;right:4%;top:-8px;font-size:44px;color:var(--vermelho);line-height:1;transform:rotate(12deg)}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
-.servico{position:relative;display:flex;flex-direction:column;background:var(--creme2);border:2px solid var(--preto);border-radius:18px;padding:30px 26px 26px;box-shadow:6px 6px 0 var(--preto)}
-.servico.top{background:var(--preto);color:var(--creme2);box-shadow:6px 6px 0 var(--vermelho);transform:rotate(-1deg)}
-.servico .pilula{position:absolute;top:-14px;left:22px;background:var(--amarelo);color:var(--preto);border:2px solid var(--preto);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.servico .ico{width:46px;height:46px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;color:var(--vermelho);margin-bottom:16px}
-.servico.top .ico{color:var(--amarelo)}
-.servico .ico svg{width:24px;height:24px}
-.servico h3{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.2;margin-bottom:8px}
-.servico p{font-size:15px;color:var(--cinza)}
-.servico.top p{color:#e6dfcf}
-.servico ul{list-style:none;margin:16px 0 24px;display:flex;flex-direction:column;gap:6px}
-.servico li{font-size:14px;font-weight:600;display:flex;gap:8px;align-items:center}
-.servico li::before{content:"✸";color:var(--vermelho);font-size:12px}
-.servico.top li::before{color:var(--amarelo)}
-.servico .btn{margin-top:auto;justify-content:center;width:100%}
-.servico.top .b-amarelo{border-color:var(--amarelo)}
+.servicos-intro{max-width:640px;margin:16px auto 0;color:var(--cinza);font-size:16px}
+.serv-sub{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.serv-sub::after{content:"";flex:1;height:2px;background:var(--preto);opacity:.15}
+.formatos{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:56px}
+.formato{background:var(--creme2);border:2px solid var(--preto);border-radius:14px;padding:20px 22px;box-shadow:4px 4px 0 var(--preto);display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:baseline}
+.formato .num{font-family:var(--display);font-size:26px;line-height:1;color:var(--vermelho);grid-row:span 2}
+.formato h3{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.2;margin-bottom:4px}
+.formato p{font-size:14px;color:var(--cinza);grid-column:2}
+.usos{background:var(--preto);color:var(--creme2);border-radius:18px;padding:34px 32px 30px;box-shadow:6px 6px 0 var(--vermelho)}
+.usos .serv-sub .rotulo{color:var(--amarelo)}
+.usos .serv-sub::after{background:var(--creme2)}
+.usos-grade{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.uso .ico{width:42px;height:42px;border-radius:50%;border:2px solid var(--amarelo);color:var(--amarelo);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.uso .ico svg{width:21px;height:21px}
+.uso h3{font-family:var(--serif);font-weight:700;font-size:18px;line-height:1.25;margin-bottom:6px}
+.uso p{font-size:14px;color:#e6dfcf}
+.servicos-cta{text-align:center;margin-top:40px}
 
 /* GALERIA */
 .galeria{background:var(--preto);color:var(--creme2);padding:84px 0;position:relative;overflow:hidden}
@@ -281,7 +282,8 @@ footer .copy{color:#cfc7b6}
   .capa .wrap{gap:56px}
   .nicho-grade{grid-template-columns:repeat(3,1fr)}
   .duvidas{grid-template-columns:repeat(2,1fr)}
-  .cards{grid-template-columns:1fr;max-width:460px;margin:0 auto;gap:30px}
+  .formatos{grid-template-columns:repeat(2,1fr)}
+  .usos-grade{grid-template-columns:repeat(2,1fr)}
   .grade-fotos{grid-template-columns:repeat(3,1fr)}
   .selo{width:104px;height:104px}
 }
@@ -299,6 +301,10 @@ footer .copy{color:#cfc7b6}
   .olho{width:70px;left:-4%}.risco{width:84px;right:-3%}.pontos{right:-3%}
   .sobre,.destaques,.nichos,.falam,.servicos,.galeria{padding:56px 0}
   .servicos-topo .estrela{display:none}
+  .formatos,.usos-grade{grid-template-columns:1fr}
+  .formatos{gap:14px;margin-bottom:40px}
+  .usos{padding:28px 22px 24px}
+  .servicos-cta .btn{width:100%;justify-content:center;white-space:normal}
   .grade-fotos{gap:8px}
   .foto-g,.palavras{border-radius:10px}
   .palavras{font-size:17px;padding:8px 10px}
@@ -697,25 +703,29 @@ function montarFalam(){
 var ICO_SERV={
   alvo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
   sacola:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+  celular:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/></svg>',
   megafone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10v4h4l7 4V6L7 10z"/><path d="M17 9a4 4 0 0 1 0 6M7 14l1 5h3l-1-4"/></svg>'
 };
 function montarServicos(){
-  var s=D.servicos||{}; var itens=s.itens||[];
-  if(!itens.length){ $('servicos').hidden=true; return; }
+  var s=D.servicos||{}; var formatos=s.formatos||[], usos=s.usos||[];
+  if(!formatos.length&&!usos.length){ $('servicos').hidden=true; return; }
   var titulo=esc(s.titulo||''), m=esc(s.palavraMao||'');
   if(m&&titulo.indexOf(m)>-1) titulo=titulo.replace(m,'<span class="mao">'+m+RABISCO+'</span>');
+  var c=linkContato(s.ctaAssunto||'');
   $('servicos-conteudo').innerHTML=
-   '<div class="servicos-topo"><p class="rotulo">'+esc(s.rotulo||'Serviços')+'</p><h2>'+titulo+'</h2><span class="estrela" aria-hidden="true">✸</span></div>'
-   +'<div class="cards">'+itens.map(function(x){
-      var c=linkContato(x.titulo);
-      return '<article class="servico'+(x.selo?' top':'')+'">'
-        +(x.selo?'<span class="pilula">'+esc(x.selo)+'</span>':'')
-        +'<span class="ico" aria-hidden="true">'+(ICO_SERV[x.icone]||ICO_SERV.alvo)+'</span>'
-        +'<h3>'+esc(x.titulo)+'</h3><p>'+esc(x.texto)+'</p>'
-        +'<ul>'+(x.lista||[]).map(function(l){return '<li>'+esc(l)+'</li>';}).join('')+'</ul>'
-        +'<a class="btn '+(x.selo?'b-amarelo':'b-contorno')+'" href="'+esc(c.href)+'" target="_blank" rel="noopener">'+t('queroEsse')+'</a>'
-        +'</article>';
-     }).join('')+'</div>';
+   '<div class="servicos-topo"><p class="rotulo">'+esc(s.rotulo||'Serviços')+'</p><h2>'+titulo+'</h2>'
+     +(s.intro?'<p class="servicos-intro">'+esc(s.intro)+'</p>':'')+'<span class="estrela" aria-hidden="true">✸</span></div>'
+   +(formatos.length?'<p class="serv-sub"><span class="rotulo">'+esc(s.formatosTitulo||'')+'</span></p>'
+     +'<div class="formatos">'+formatos.map(function(x,i){
+        return '<article class="formato"><span class="num" aria-hidden="true">'+(i<9?'0':'')+(i+1)+'</span>'
+          +'<h3>'+esc(x.nome)+'</h3><p>'+esc(x.texto)+'</p></article>';
+      }).join('')+'</div>':'')
+   +(usos.length?'<div class="usos"><p class="serv-sub"><span class="rotulo">'+esc(s.usosTitulo||'')+'</span></p>'
+     +'<div class="usos-grade">'+usos.map(function(x){
+        return '<article class="uso"><span class="ico" aria-hidden="true">'+(ICO_SERV[x.icone]||ICO_SERV.alvo)+'</span>'
+          +'<h3>'+esc(x.nome)+'</h3><p>'+esc(x.texto)+'</p></article>';
+      }).join('')+'</div></div>':'')
+   +(s.cta?'<div class="servicos-cta"><a class="btn b-amarelo" href="'+esc(c.href)+'" target="_blank" rel="noopener">'+esc(s.cta)+'</a></div>':'');
 }
 function montarGaleria(){
   var g=D.galeria||{}; var fotos=g.fotos||[];
@@ -916,17 +926,36 @@ const DADOS = {
       { titulo: "Tudo sobre a Talk N Talk!", formato: "", video: "https://youtube.com/shorts/ibidy08xEZQ", capa: "" }
     ]}
   ],
-  // Seção "O que podemos criar juntos?" (fica no lugar dos depoimentos).
-  // selo: etiqueta amarela no card em destaque (vazio = card normal). icone: alvo, sacola ou megafone
+  // Seção "O que podemos criar juntos?". intro: o textinho logo abaixo do título.
+  // formatos: os tipos de vídeo (aparecem numerados, na ordem daqui).
+  // usos: onde o vídeo roda. icone: alvo, sacola, celular ou megafone.
+  // cta: texto do botão no fim da seção. ctaAssunto: o assunto que entra na mensagem do WhatsApp.
   servicos: {
     rotulo: "Serviços",
     titulo: "O que podemos criar juntos?",
     palavraMao: "criar",
-    itens: [
-      { titulo: "Criativos para tráfego", texto: "Ads pra Meta, TikTok e YouTube feitos pra baixar seu CPA.", lista: ["Meta", "TikTok", "YouTube"], selo: "Mais pedido", icone: "alvo" },
-      { titulo: "UGC para e-commerce", texto: "Vídeo de produto com cara de cliente real, pra sua loja vender todo dia.", lista: ["Review", "Unboxing", "Uso real"], selo: "", icone: "sacola" },
-      { titulo: "Publi post", texto: "Sua marca no meu perfil, falando com quem já confia em mim.", lista: ["Reels", "Stories", "TikTok"], selo: "", icone: "megafone" }
-    ]
+    intro: "Seu objetivo decide o formato. Quer apresentar um lançamento, tirar a dúvida de quem está quase comprando ou dar mais força ao seu anúncio? Eu escolho e combino os formatos abaixo e entrego o vídeo pronto para onde ele vai rodar.",
+    formatosTitulo: "Formatos de vídeo",
+    formatos: [
+      { nome: "Unboxing", texto: "A primeira impressão do produto, da caixa ao primeiro uso." },
+      { nome: "Review", texto: "Minha opinião sincera depois de usar o produto de verdade." },
+      { nome: "Demonstrativo", texto: "Mostro de perto como funciona, passo a passo." },
+      { nome: "Educativo", texto: "Ensino algo útil e o produto entra como parte da solução." },
+      { nome: "Rotina", texto: "O produto no meu dia a dia, do jeito que entraria no do seu cliente." },
+      { nome: "Prova social", texto: "Fala de cliente real, que tira a dúvida de quem ainda não comprou." },
+      { nome: "Trends", texto: "Áudios e formatos do momento, adaptados para a sua marca." },
+      { nome: "Paparazzi", texto: "Cenas espontâneas, como se alguém tivesse flagrado o produto em uso." },
+      { nome: "Locução", texto: "Minha voz narrando o vídeo, com roteiro e som tratado." }
+    ],
+    usosTitulo: "Onde o seu vídeo vai rodar",
+    usos: [
+      { nome: "Anúncios", texto: "Criativos para Meta, TikTok e YouTube, com gancho forte e feitos para tráfego pago.", icone: "alvo" },
+      { nome: "Marketplace e e-commerce", texto: "Vídeo para a página do produto no Mercado Livre, na Shopee, na Amazon ou no site da sua loja.", icone: "sacola" },
+      { nome: "Perfil da sua marca", texto: "Reels, TikToks e Stories para postar no seu perfil, sem marca d'água.", icone: "celular" },
+      { nome: "Publi no meu perfil", texto: "Sua marca no meu Instagram e no meu TikTok, em Reels e Stories.", icone: "megafone" }
+    ],
+    cta: "Me conta o que sua marca precisa →",
+    ctaAssunto: "vídeos"
   },
   // Galeria de fotos (fundo preto, antes de Serviços). Fotos quadradas em midia/galeria.
   // palavras: o quadrinho amarelo com texto, que entra na posição "posicaoPalavras" (contando a partir de 0)
@@ -965,7 +994,7 @@ const DADOS = {
     { pergunta: "Onde posso usar o conteúdo?", resposta: "Nas redes sociais, no site e nos anúncios da sua marca (Meta, TikTok e afins). O vídeo chega em 9:16, sem marca d'água, pronto pra subir. TV e mídia offline a gente combina à parte." },
     { pergunta: "Por quanto tempo?", resposta: "No perfil da marca, o vídeo fica sem prazo. Para anúncios, a licença padrão é de 6 meses, e renovar é simples. Tudo vai por escrito no orçamento, sem letra miúda." },
     { pergunta: "Tem exclusividade?", resposta: "Não é obrigatória, e isso deixa o seu orçamento mais leve. Se a sua marca precisa que eu não grave pra concorrentes diretos por um período, eu incluo no combinado." },
-    { pergunta: "Qual o prazo?", resposta: "Até 7 dias úteis depois que o produto chega e você aprova o roteiro. Nada é gravado sem o seu ok, e uma rodada de ajustes já está incluída." }
+    { pergunta: "Qual o prazo?", resposta: "Até 10 dias úteis depois que o produto chega e você aprova o roteiro. Nada é gravado sem o seu ok, e uma rodada de ajustes já está incluída." }
   ]
 };
 
@@ -1012,11 +1041,28 @@ const DADOS_EN = {
     rotulo: "Services",
     titulo: "What can we create together?",
     palavraMao: "create",
-    itens: [
-      { titulo: "Performance ad creatives", texto: "Ads for Meta, TikTok and YouTube, built to lower your CPA.", lista: ["Meta", "TikTok", "YouTube"], selo: "Most popular" },
-      { titulo: "UGC for e-commerce", texto: "Product videos that feel like they came from a real customer, so your store sells every day.", lista: ["Reviews", "Unboxings", "Real-life use"] },
-      { titulo: "Sponsored posts", texto: "Your brand on my profile, in front of people who already trust me.", lista: ["Reels", "Stories", "TikTok"] }
-    ]
+    intro: "Your goal shapes the format. Launching something new, answering the doubts of people who are almost ready to buy, or giving your ads a boost? I pick and mix the formats below and deliver a video that's ready for wherever it's going to run.",
+    formatosTitulo: "Video formats",
+    formatos: [
+      { nome: "Unboxing", texto: "First impressions, from the box to the first use." },
+      { nome: "Review", texto: "My honest take after actually using the product." },
+      { nome: "Demo", texto: "A close-up, step-by-step look at how it works." },
+      { nome: "Educational", texto: "I teach something useful, and your product is part of the answer." },
+      { nome: "Routine", texto: "Your product in my everyday life, just like it would fit into your customer's." },
+      { nome: "Social proof", texto: "Real-customer talk that answers the questions of people who haven't bought yet." },
+      { nome: "Trends", texto: "Trending sounds and formats, adapted to your brand." },
+      { nome: "Paparazzi", texto: "Candid shots, as if someone caught the product in use." },
+      { nome: "Voiceover", texto: "My voice narrating your video, with a script and clean audio." }
+    ],
+    usosTitulo: "Where your video will run",
+    usos: [
+      { nome: "Ads", texto: "Creatives for Meta, TikTok and YouTube, with a strong hook and built for paid traffic." },
+      { nome: "Marketplaces & e-commerce", texto: "Product-page videos for Amazon, Mercado Livre, Shopee or your own online store." },
+      { nome: "Your brand's profile", texto: "Reels, TikToks and Stories to post on your own profile, watermark-free." },
+      { nome: "Sponsored post on my profile", texto: "Your brand on my Instagram and TikTok, in Reels and Stories." }
+    ],
+    cta: "Tell me what your brand needs →",
+    ctaAssunto: "videos"
   },
   galeria: {
     rotulo: "Gallery",
@@ -1028,7 +1074,7 @@ const DADOS_EN = {
     { pergunta: "Where can I use the content?", resposta: "On your brand's social media, website and ads (Meta, TikTok and more). Videos are delivered in 9:16, watermark-free and ready to post. TV and offline media can be arranged separately." },
     { pergunta: "How long can I use it?", resposta: "On your brand's own profile, there's no time limit. For paid ads, the standard license is 6 months, and renewing is easy. Everything is spelled out in the quote, no fine print." },
     { pergunta: "Do you offer exclusivity?", resposta: "It's not required, which keeps your quote lower. If your brand needs me to stay away from direct competitors for a while, I'll build it into our agreement." },
-    { pergunta: "What's the turnaround?", resposta: "Up to 7 business days after the product arrives and you approve the script. Nothing gets filmed without your OK, and one round of revisions is included." }
+    { pergunta: "What's the turnaround?", resposta: "Up to 10 business days after the product arrives and you approve the script. Nothing gets filmed without your OK, and one round of revisions is included." }
   ]
 };
 
