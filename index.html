@@ -27,6 +27,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:76px}
+main{overflow-x:hidden;overflow-x:clip} /* nada de rolagem pro lado no celular */
 body{font-family:var(--texto);font-size:15px;line-height:1.6;color:var(--preto);background:var(--creme);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img,video,svg{display:block;max-width:100%}
 a{color:inherit}
@@ -314,6 +315,10 @@ footer .copy{color:#cfc7b6}
 }
 /* CELULAR */
 @media (max-width:520px){
+  .menu .wrap{gap:10px}
+  .logo{font-size:22px}
+  .idioma button{padding:10px 12px}
+  .menu-btn{padding:10px 13px;margin-left:0}
   .wrap{padding:0 16px}
   .links{padding:6px 16px 14px}
   .capa{padding:32px 0 56px}
@@ -327,7 +332,10 @@ footer .copy{color:#cfc7b6}
   .sobre,.destaques,.nichos,.falam,.servicos,.galeria{padding:56px 0}
   .servicos-topo .estrela{display:none}
   .formatos,.usos-grade{grid-template-columns:1fr}
-  .formatos{gap:14px;margin-bottom:40px}
+  .formatos{gap:10px;margin-bottom:40px}
+  .formato{padding:14px 16px;box-shadow:3px 3px 0 var(--preto)}
+  .formato .num{font-size:22px}
+  .formato h3{font-size:17px;margin-bottom:2px}
   .usos{padding:28px 22px 24px}
   .servicos-cta .btn{width:100%;justify-content:center;white-space:normal}
   .grade-fotos{gap:8px}
@@ -361,6 +369,11 @@ footer .copy{color:#cfc7b6}
   .faixa-amarela{padding:52px 0}
   .explosao{width:110px}
   footer .wrap{padding-right:76px}
+}
+@media (max-width:374px){
+  .logo{font-size:19px}
+  .idioma button{padding:10px 9px}
+  .menu-btn{padding:10px 10px;font-size:11px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -688,7 +701,7 @@ function montarFilme(){
   if(!fotos.length){ $('filme-area').style.display='none'; return; }
   var vezes=Math.max(1,Math.ceil(16/fotos.length)), lista=[];
   for(var k=0;k<vezes;k++) lista=lista.concat(fotos);
-  var bloco=lista.map(function(src){return '<div class="quadro"><img src="'+caminho(src)+'" alt="" loading="lazy" decoding="async"></div>';}).join('');
+  var bloco=lista.map(function(src){return '<div class="quadro"><img src="'+caminho(src)+'" alt="" decoding="async"></div>';}).join('');
   $('filme-area').setAttribute('aria-label',f.descricao||'');
   $('filme-area').setAttribute('role','img');
   $('filme').innerHTML='<div class="filme-grupo">'+bloco+'</div><div class="filme-grupo" aria-hidden="true">'+bloco+'</div>';
