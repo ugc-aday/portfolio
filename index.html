@@ -118,6 +118,31 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,44px);lin
 .dif svg{width:34px;height:34px;color:var(--amarelo);margin-bottom:12px}
 .dif h4{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.2;margin-bottom:6px}
 .dif p{font-size:14px;color:#e6dfcf}
+
+/* PROCESSO (dentro da faixa preta) */
+.processo{margin-top:48px;padding-top:40px;border-top:1px solid rgba(251,246,234,.3)}
+.processo h3{margin-bottom:30px}
+.etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;position:relative;list-style:none}
+.etapas::before{content:"";position:absolute;top:23px;left:24px;right:calc((100% - 72px) / 3 - 24px);border-top:2px dashed rgba(242,180,22,.55)}
+.etapa{position:relative}
+.etapa-num{position:relative;width:48px;height:48px;border-radius:50%;background:var(--amarelo);color:var(--preto);border:2px solid var(--preto);box-shadow:0 0 0 6px var(--preto);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:26px;line-height:1;margin-bottom:18px}
+.etapa h4{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.2;margin-bottom:10px}
+.etapa p{font-size:14px;color:#e6dfcf}
+.etapa p+p{margin-top:10px}
+
+/* FAIXA DE FILME (antes de "O que eu faço") */
+.filme-area{overflow:hidden;padding:26px 0;background:var(--creme)}
+.filme{transform:rotate(-1.6deg);width:106%;margin-left:-3%;background:var(--preto);border-top:2px solid var(--preto);border-bottom:2px solid var(--preto);box-shadow:0 8px 0 rgba(21,21,21,.12)}
+.filme-trilho{display:flex;width:max-content;animation:rola 48s linear infinite}
+.filme-grupo{display:flex;flex:none;gap:10px;padding:22px 5px;position:relative}
+.filme-grupo::before,.filme-grupo::after{content:"";position:absolute;left:0;right:0;height:10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='10'%3E%3Crect x='5' y='0' width='14' height='10' rx='2.5' fill='%23F6EEDC'/%3E%3C/svg%3E") repeat-x;background-size:24px 10px}
+.filme-grupo::before{top:6px}
+.filme-grupo::after{bottom:6px}
+.quadro{position:relative;flex:none;height:150px;aspect-ratio:3/5;border-radius:6px;overflow:hidden;background:#2a2622}
+.quadro img{width:100%;height:100%;object-fit:cover;filter:sepia(.22) contrast(1.06) saturate(1.08)}
+.quadro::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(21,21,21,.45) 100%);animation:tremula 3.2s steps(1) infinite;pointer-events:none}
+.quadro:nth-child(odd)::after{animation-delay:-1.4s}
+@keyframes tremula{0%,100%{opacity:1}12%{opacity:.7}14%{opacity:1}47%{opacity:.82}49%{opacity:1}78%{opacity:.75}80%{opacity:1}}
 .numeros{display:flex;gap:48px;flex-wrap:wrap;margin-top:36px;padding-top:26px;border-top:1px solid rgba(251,246,234,.3)}
 .numeros b{display:block;font-family:var(--display);font-weight:900;font-size:48px;line-height:1;color:var(--amarelo)}
 .numeros span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
@@ -313,7 +338,15 @@ footer .copy{color:#cfc7b6}
   .sobre .wrap{gap:44px}
   .sobre-arte{max-width:300px}
   .coroa{width:70px;right:-6px;top:-36px}
-  .difs,.elogios,.duvidas{grid-template-columns:1fr}
+  .difs,.elogios,.duvidas,.etapas{grid-template-columns:1fr}
+  .etapas{gap:30px}
+  .etapas::before{display:none}
+  .etapa:not(:last-child)::after{content:"";position:absolute;left:23px;top:56px;bottom:-24px;border-left:2px dashed rgba(242,180,22,.55)}
+  .etapa{padding-left:68px}
+  .etapa-num{position:absolute;left:0;top:0;margin:0}
+  .quadro{height:112px}
+  .filme-grupo{padding:19px 4px;gap:8px}
+  .filme-area{padding:18px 0}
   .dif,.elogio{padding:20px 0 0;margin-top:20px;border-left:0;border-top:1px solid rgba(251,246,234,.3)}
   .elogio{border-top-color:rgba(255,255,255,.55)}
   .dif:first-child,.elogio:first-child{padding-top:0;margin-top:0;border-top:0}
@@ -333,6 +366,8 @@ footer .copy{color:#cfc7b6}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rolo-trilho{width:auto;flex-wrap:wrap;justify-content:center}
+  .filme-trilho{animation:none}
+  .quadro::after{animation:none}
   .rolo-grupo{flex-wrap:wrap;justify-content:center}
   .rolo-grupo[aria-hidden]{display:none}
 }
@@ -344,6 +379,7 @@ footer .copy{color:#cfc7b6}
 <main>
   <section class="capa" id="capa"><div class="wrap" id="capa-conteudo"></div></section>
   <section class="sobre" id="sobre"><div class="wrap" id="sobre-conteudo"></div></section>
+  <div class="filme-area" id="filme-area"><div class="filme"><div class="filme-trilho" id="filme"></div></div></div>
   <div class="faixa-preta"><div class="wrap" id="faixa-preta"></div></div>
   <div class="rolo" aria-label="Marcas atendidas"><div class="rolo-trilho" id="rolo"></div></div>
   <section class="destaques" id="destaques"><div class="wrap" id="destaques-conteudo"></div></section>
@@ -632,8 +668,30 @@ function montarSobre(){
    +(D.diferenciais||[]).map(function(d,i){return '<div class="dif">'+(ICO.difs[i%3])+'<h4>'+esc(d.titulo)+'</h4><p>'+esc(d.texto)+'</p></div>';}).join('')
    +'</div>'+(D.mostrarProvas?'<div class="numeros">'
    +(D.provas||[]).map(function(p){return '<div><b>'+(p.numero?esc(p.numero):'<span class="vazio" title="'+t('preencha')+'">?</span>')+'</b><span>'+esc(p.texto)+'</span></div>';}).join('')
-   +'</div>':'');
+   +'</div>':'')
+   +montarProcesso();
   document.querySelector('.rolo').setAttribute('aria-label',t('marcasAtendidas'));
+}
+/* etapas do processo (aparecem dentro da faixa preta, depois dos diferenciais) */
+function montarProcesso(){
+  var pr=D.processo||{}; var etapas=pr.etapas||[];
+  if(!etapas.length) return '';
+  return '<div class="processo"><h3>'+esc(pr.titulo||'')+'</h3><ol class="etapas" role="list">'
+    +etapas.map(function(e,i){
+      return '<li class="etapa"><span class="etapa-num" aria-hidden="true">'+(i+1)+'</span><h4>'+esc(e.titulo)+'</h4>'
+        +(e.textos||[]).map(function(tx){return '<p>'+esc(tx)+'</p>';}).join('')+'</li>';
+    }).join('')+'</ol></div>';
+}
+/* faixa de filme: as ilustrações passando de lado, repetidas pra encher a tela */
+function montarFilme(){
+  var f=D.filme||{}; var fotos=f.fotos||[];
+  if(!fotos.length){ $('filme-area').style.display='none'; return; }
+  var vezes=Math.max(1,Math.ceil(16/fotos.length)), lista=[];
+  for(var k=0;k<vezes;k++) lista=lista.concat(fotos);
+  var bloco=lista.map(function(src){return '<div class="quadro"><img src="'+caminho(src)+'" alt="" loading="lazy" decoding="async"></div>';}).join('');
+  $('filme-area').setAttribute('aria-label',f.descricao||'');
+  $('filme-area').setAttribute('role','img');
+  $('filme').innerHTML='<div class="filme-grupo">'+bloco+'</div><div class="filme-grupo" aria-hidden="true">'+bloco+'</div>';
 }
 function montarRolo(){
   var grupo=(D.marcas||[]).map(function(m){
@@ -815,7 +873,7 @@ function montarConteudo(){
   $('player').setAttribute('aria-label',t('player'));
   $('player-x').setAttribute('aria-label',t('fechar'));
   $('player-yt').setAttribute('title',t('videoYt'));
-  montarMenu(); montarCapa(); montarSobre(); montarRolo(); montarDestaques(); montarNichos(); montarFalam(); montarServicos(); montarGaleria(); montarContato();
+  montarMenu(); montarCapa(); montarSobre(); montarFilme(); montarRolo(); montarDestaques(); montarNichos(); montarFalam(); montarServicos(); montarGaleria(); montarContato();
 }
 /* troca de idioma pelo botão PT/EN: guarda a escolha e põe ?lang=en no link */
 function trocarIdioma(l){
@@ -896,6 +954,29 @@ const DADOS = {
     { titulo: "Roteiro aprovado antes", texto: "O roteiro é meu, e a marca aprova antes de eu gravar." },
     { titulo: "Edição pronta pra anúncio", texto: "Entrego com gancho forte e som tratado, pronto pra rodar." }
   ],
+  // Processo de trabalho (aparece na faixa preta, depois dos 3 diferenciais). Cada etapa pode ter mais de um parágrafo em "textos".
+  processo: {
+    titulo: "Processo",
+    etapas: [
+      { titulo: "Triagem & Alinhamento Estratégico", textos: [
+        "Alinhamento estratégico da parceria, entendendo a identidade, objetivos e posicionamento da marca.",
+        "Aqui também definimos o pacote ideal, formato dos conteúdos, prazos e demais detalhes necessários para o desenvolvimento do projeto e formalização do contrato."
+      ]},
+      { titulo: "Roteiro & Produção", textos: [
+        "Com o briefing alinhado, iniciamos a criação do conteúdo. O roteiro pode ser enviado pela marca ou desenvolvido por mim, sempre seguindo a proposta da campanha.",
+        "Após o recebimento dos produtos, realizo toda a produção do material e compartilho atualizações para aprovação e possíveis ajustes durante o processo."
+      ]},
+      { titulo: "Entrega Final", textos: [
+        "Os conteúdos são entregues dentro do prazo acordado, via Google Drive.",
+        "Follow up para feedbacks, métricas e pagamentos."
+      ]}
+    ]
+  },
+  // Faixa de filme que passa de lado antes de "O que eu faço pela sua marca". Imagens verticais em midia/filme.
+  filme: {
+    descricao: "Ilustrações da Day com produtos de beleza e cabelo",
+    fotos: ["midia/filme/1.jpg", "midia/filme/2.jpg", "midia/filme/3.jpg", "midia/filme/4.jpg", "midia/filme/5.jpg"]
+  },
   // Seus 3 MELHORES vídeos (o primeiro é o mais forte e fica maior).
   // formato: ADS, review, unboxing, tutorial ou nativo. capa: imagem opcional. res: resultado real (ex.: "116 vendas"), ou vazio
   destaques: [
@@ -1024,6 +1105,24 @@ const DADOS_EN = {
     { titulo: "Script approved upfront", texto: "I write the script, and your brand signs off before I hit record." },
     { titulo: "Ad-ready editing", texto: "Delivered with a strong hook and clean audio, ready to run." }
   ],
+  processo: {
+    titulo: "How it works",
+    etapas: [
+      { titulo: "Screening & Strategic Alignment", textos: [
+        "We align the partnership strategy, getting to know your brand's identity, goals and positioning.",
+        "This is also where we define the right package, content formats, deadlines and any other details needed to develop the project and formalize the contract."
+      ]},
+      { titulo: "Script & Production", textos: [
+        "Once the brief is aligned, we start creating the content. The script can be sent by your brand or written by me, always following the campaign's concept.",
+        "After the products arrive, I handle the entire production and share updates for approval and any adjustments along the way."
+      ]},
+      { titulo: "Final Delivery", textos: [
+        "Content is delivered within the agreed deadline via Google Drive.",
+        "Follow-up for feedback, metrics and payments."
+      ]}
+    ]
+  },
+  filme: { descricao: "Illustrations of Day with beauty and hair care products" },
   destaques: [
     { titulo: "Candura", nicho: "home & decor", formato: "routine" },
     { titulo: "Predlecta is life!", nicho: "food", formato: "routine" },
