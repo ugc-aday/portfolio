@@ -32,6 +32,7 @@ body{font-family:var(--texto);font-size:15px;line-height:1.6;color:var(--preto);
 img,video,svg{display:block;max-width:100%}
 a{color:inherit}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.sanfona-btn{display:block;width:100%;padding:0;margin:0;text-align:inherit;letter-spacing:inherit;line-height:inherit;cursor:default}
 .wrap{width:100%;max-width:1180px;margin:0 auto;padding:0 32px}
 section{position:relative}
 .rotulo{font-family:var(--texto);font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--vermelho)}
@@ -157,6 +158,7 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(30px,3.6vw,44px);lin
 .rolo-grupo span::after{content:"✸";color:var(--vermelho);font-size:16px}
 .rolo-grupo img{height:30px;width:auto;filter:grayscale(1)}
 @keyframes rola{to{transform:translateX(-50%)}}
+@keyframes rola-m{to{transform:translateX(-360px)}}
 
 /* VÍDEOS */
 .vid{position:relative;aspect-ratio:9/16;overflow:hidden;display:block;width:100%;border-radius:4px}
@@ -343,17 +345,53 @@ footer .copy{color:#cfc7b6}
   .palavras{font-size:17px;padding:8px 10px}
   .galeria-topo .pontos-g{display:none}
   .contato{padding-top:56px}
+  /* capa: foto entre o texto e os botões */
+  .capa .wrap{display:flex;flex-direction:column;align-items:stretch;gap:0;position:relative}
+  .capa-esq{display:contents}
+  .capa .selo{right:16px}
+  .capa .arte{order:1;margin:34px auto 40px}
+  .capa .acoes{order:2}
+  .capa-esq>div[style]{display:none}
+  /* sobre: sem assinatura e sem o balão amarelo */
+  .sobre-fim{display:none}
+  /* sanfonas */
+  .sanfona-btn{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;-webkit-tap-highlight-color:transparent}
+  .sanfona-btn::after{content:"";flex:none;width:9px;height:9px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:translateY(-3px) rotate(45deg);transition:transform .2s}
+  [data-sanfona].aberta .sanfona-btn::after{transform:translateY(2px) rotate(-135deg)}
+  [data-sanfona]:not(.aberta)>p{display:none}
+  [data-sanfona]{cursor:pointer}
+  /* dúvidas */
+  .duvidas{gap:0}
+  .duvida{padding:16px 0}
+  .duvida:last-child{border-bottom:3px solid var(--preto)}
+  .duvida h3{margin:0;font-size:18px}
+  .duvida.aberta h3{margin-bottom:8px}
+  /* formatos: lista compacta */
+  .formatos{gap:8px}
+  .formato{padding:12px 16px;align-items:center}
+  .formato .num{grid-row:auto}
+  .formato h3{margin:0}
+  .formato.aberta p{margin-top:6px}
+  /* processo: número e título, o resto abre ao tocar */
+  .etapa{min-height:48px}
+  .etapa h4{min-height:48px;display:flex;align-items:center;margin:0}
+  .etapa.aberta h4{margin-bottom:10px}
+  .etapa .sanfona-btn::after{color:var(--amarelo)}
+  .etapas{gap:22px}
+  /* faixa de filme: trilho curto, já começa com as imagens */
+  .quadro{height:106px;width:64px;aspect-ratio:auto}
+  .filme-grupo{gap:8px;padding:19px 0}
+  .filme-grupo[aria-hidden]{display:none}
+  .filme-grupo .quadro:nth-child(n+14){display:none}
+  .filme-trilho{animation:rola-m 12s linear infinite;will-change:transform}
   .sobre .wrap{gap:44px}
   .sobre-arte{max-width:300px}
   .coroa{width:70px;right:-6px;top:-36px}
   .difs,.elogios,.duvidas,.etapas{grid-template-columns:1fr}
-  .etapas{gap:30px}
   .etapas::before{display:none}
-  .etapa:not(:last-child)::after{content:"";position:absolute;left:23px;top:56px;bottom:-24px;border-left:2px dashed rgba(242,180,22,.55)}
+  .etapa:not(:last-child)::after{content:"";position:absolute;left:23px;top:56px;bottom:-22px;border-left:2px dashed rgba(242,180,22,.55)}
   .etapa{padding-left:68px}
   .etapa-num{position:absolute;left:0;top:0;margin:0}
-  .quadro{height:112px}
-  .filme-grupo{padding:19px 4px;gap:8px}
   .filme-area{padding:18px 0}
   .dif,.elogio{padding:20px 0 0;margin-top:20px;border-left:0;border-top:1px solid rgba(251,246,234,.3)}
   .elogio{border-top-color:rgba(255,255,255,.55)}
@@ -691,7 +729,7 @@ function montarProcesso(){
   if(!etapas.length) return '';
   return '<div class="processo"><h3>'+esc(pr.titulo||'')+'</h3><ol class="etapas" role="list">'
     +etapas.map(function(e,i){
-      return '<li class="etapa"><span class="etapa-num" aria-hidden="true">'+(i+1)+'</span><h4>'+esc(e.titulo)+'</h4>'
+      return '<li class="etapa" data-sanfona><span class="etapa-num" aria-hidden="true">'+(i+1)+'</span><h4><button type="button" class="sanfona-btn">'+esc(e.titulo)+'</button></h4>'
         +(e.textos||[]).map(function(tx){return '<p>'+esc(tx)+'</p>';}).join('')+'</li>';
     }).join('')+'</ol></div>';
 }
@@ -701,7 +739,7 @@ function montarFilme(){
   if(!fotos.length){ $('filme-area').style.display='none'; return; }
   var vezes=Math.max(1,Math.ceil(16/fotos.length)), lista=[];
   for(var k=0;k<vezes;k++) lista=lista.concat(fotos);
-  var bloco=lista.map(function(src){return '<div class="quadro"><img src="'+caminho(src)+'" alt="" decoding="async"></div>';}).join('');
+  var bloco=lista.map(function(src){return '<div class="quadro"><img src="'+caminho(src)+'" alt="" decoding="async" fetchpriority="high"></div>';}).join('');
   $('filme-area').setAttribute('aria-label',f.descricao||'');
   $('filme-area').setAttribute('role','img');
   $('filme').innerHTML='<div class="filme-grupo">'+bloco+'</div><div class="filme-grupo" aria-hidden="true">'+bloco+'</div>';
@@ -788,8 +826,8 @@ function montarServicos(){
      +(s.intro?'<p class="servicos-intro">'+esc(s.intro)+'</p>':'')+'<span class="estrela" aria-hidden="true">✸</span></div>'
    +(formatos.length?'<p class="serv-sub"><span class="rotulo">'+esc(s.formatosTitulo||'')+'</span></p>'
      +'<div class="formatos">'+formatos.map(function(x,i){
-        return '<article class="formato"><span class="num" aria-hidden="true">'+(i<9?'0':'')+(i+1)+'</span>'
-          +'<h3>'+esc(x.nome)+'</h3><p>'+esc(x.texto)+'</p></article>';
+        return '<article class="formato" data-sanfona><span class="num" aria-hidden="true">'+(i<9?'0':'')+(i+1)+'</span>'
+          +'<h3><button type="button" class="sanfona-btn">'+esc(x.nome)+'</button></h3><p>'+esc(x.texto)+'</p></article>';
       }).join('')+'</div>':'')
    +(usos.length?'<div class="usos"><p class="serv-sub"><span class="rotulo">'+esc(s.usosTitulo||'')+'</span></p>'
      +'<div class="usos-grade">'+usos.map(function(x){
@@ -817,7 +855,7 @@ function montarContato(){
   var c=linkContato(), insta=linkInstagram();
   $('duvidas-conteudo').innerHTML='<p class="rotulo">'+t('contatoRotulo')+'</p><h2>'+t('duvidasTitulo')+'</h2><div class="duvidas">'
    +(D.duvidas||[]).map(function(d){
-      return '<div class="duvida"><h3>'+esc(d.pergunta)+'</h3>'+(d.resposta?'<p>'+esc(d.resposta)+'</p>':'<p class="lacuna-txt">'+t('semResposta')+'</p>')+'</div>';
+      return '<div class="duvida" data-sanfona><h3><button type="button" class="sanfona-btn">'+esc(d.pergunta)+'</button></h3>'+(d.resposta?'<p>'+esc(d.resposta)+'</p>':'<p class="lacuna-txt">'+t('semResposta')+'</p>')+'</div>';
      }).join('')+'</div>';
 
   var form='';
@@ -880,6 +918,23 @@ function abrirNichoDoLink(){
   }
 }
 
+/* SANFONAS (só no celular): dúvidas, formatos e processo abrem ao tocar */
+var CELULAR=window.matchMedia?matchMedia('(max-width:520px)'):{matches:false};
+function ajustarSanfonas(){
+  document.querySelectorAll('[data-sanfona]').forEach(function(item){
+    var b=item.querySelector('.sanfona-btn'); if(!b) return;
+    if(CELULAR.matches){ b.setAttribute('aria-expanded',item.classList.contains('aberta')?'true':'false'); b.tabIndex=0; }
+    else { item.classList.remove('aberta'); b.removeAttribute('aria-expanded'); b.tabIndex=-1; }
+  });
+}
+document.addEventListener('click',function(e){
+  if(!CELULAR.matches) return;
+  var item=e.target.closest('[data-sanfona]'); if(!item||e.target.closest('a')) return;
+  var aberta=item.classList.toggle('aberta');
+  var b=item.querySelector('.sanfona-btn'); if(b) b.setAttribute('aria-expanded',aberta?'true':'false');
+});
+if(CELULAR.addEventListener) CELULAR.addEventListener('change',ajustarSanfonas); else if(CELULAR.addListener) CELULAR.addListener(ajustarSanfonas);
+
 /* monta (ou remonta) todo o conteúdo no idioma atual */
 function montarConteudo(){
   document.title=D.nome+t('tituloPagina');
@@ -887,6 +942,7 @@ function montarConteudo(){
   $('player-x').setAttribute('aria-label',t('fechar'));
   $('player-yt').setAttribute('title',t('videoYt'));
   montarMenu(); montarCapa(); montarSobre(); montarFilme(); montarRolo(); montarDestaques(); montarNichos(); montarFalam(); montarServicos(); montarGaleria(); montarContato();
+  ajustarSanfonas();
 }
 /* troca de idioma pelo botão PT/EN: guarda a escolha e põe ?lang=en no link */
 function trocarIdioma(l){
